@@ -425,6 +425,11 @@
               <FileType>5</FileType>
               <FilePath>.\initialization.h</FilePath>
             </File>
+            <File>
+              <FileName>tm4c123gh6pm2.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\tm4c123gh6pm2.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

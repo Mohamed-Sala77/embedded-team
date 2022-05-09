@@ -411,19 +411,19 @@
               <FilePath>.\startup_TM4C123.s</FilePath>
             </File>
             <File>
-              <FileName>finsl.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\finsl.c</FilePath>
-            </File>
-            <File>
               <FileName>Io.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Io.h</FilePath>
             </File>
             <File>
+              <FileName>main project.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main project.c</FilePath>
+            </File>
+            <File>
               <FileName>initialization.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\initialization.h</FilePath>
+              <FilePath>.\initialization.h</FilePath>
             </File>
           </Files>
         </Group>
