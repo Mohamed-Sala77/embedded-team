@@ -1,1 +1,4 @@
-xccx
+#define set.1bit (reg,bit) reg|=(1<<bit);
+#define clr.1bit (reg,bit) reg&=(~(1<<bit));
+#define tgl.1bit (reg,bit) reg^=(1<<bit);
+#define read.1bit (reg,bit) (reg&(1<<bit))>>bit;
