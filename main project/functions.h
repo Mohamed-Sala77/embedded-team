@@ -7,6 +7,26 @@
     #define NVIC_ST_RELOAD_R        (*((volatile unsigned long *)0xE000E014))
     #define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))
 
+         void PAUSE(){
+
+        //LCD =NVIC_ST_CURRENT_R 
+        NVIC_ST_CTRL_R &= 0xFFFFFFFE;
+
+        }
+
+        void resume(){
+
+        NVIC_ST_CTRL_R |=0X00000001;
+        //LCD =NVIC_ST_CURRENT_R;
+        }
+
+        void clear (){
+            //LCD = 00:00
+            NVIC_ST_CURRENT_R=0X000;
+
+        }
+    
+    
     int check_door (){
     SW3_INIT ();
     //GET_SW3
@@ -29,11 +49,28 @@
     }
     void NUM_SEC(unsigned long num)
     {
-    int i;
-			
+    int i;		
     for (int i = 0; i < num; i++)
 		{
 			systick_init(0X04C4B400); //ONE SEC
+            if ((GPIO_PORTE_DATA_R & 0x01==0) | (GPIO_PORTF_DATA_R & 0x10==0))
+            {
+               void PAUSE()
+               nop;
+               nop;
+               nop;
+               while (1)
+               {
+                if(GPIO_PORTF_DATA_R & 0x10==0){ 
+                    clear(); 
+                    break; }
+                else if (GPIO_PORTF_DATA_R & 0x01==0) {
+                    resume();
+                    break; }
+               }
+               }
+               if (/*LCD "00:00"*/) break;
+            
 		}
 	
 		}
@@ -42,12 +79,14 @@
 		{
 		int i;
 		int j;
-			for (int j = 0; j < (num-1); i++)
+			for (int j = 0; j < num; i++)
 			{
 			for (int i = 0; i < 60; i++)
 			{
-				systick_init(0X04C4B400); //ONE SEC
+				NUM_SEC(1); //ONE SEC
+                 if (/*LCD "00:00"*/) break;
 			}
+             if (/*LCD "00:00"*/) break;
 			}
 	
 		}
@@ -64,7 +103,7 @@
         void LED_BLINK(){
 		
 		while(1){
-        LED_Init () ;
+        LED_Init () // PUT IN MAIN INIT ;
 		GPIO_PORTF_DATA_R ^= 0x0E;
 		NUM_SEC(1);
 		}
@@ -87,6 +126,7 @@
         while(1){
         if(total_min<=30){
             /*LCD"total_min:00"*/
+            
             break;
             }
         else //printf"PLZ ENTER BELOW 30 MIN"
@@ -103,7 +143,8 @@
         total_sec =(i | j) ;
         //LCD"00:total_sec"
             /*LCD"00:total_sec"*/
-           
+            
+            
         }
         
         float NUMBER MIN_BEEF KILO(char kilos  /*GIT_FROM_KYPAD)()*/ )
@@ -139,5 +180,6 @@
         }
         }
         }
+   
         
 
