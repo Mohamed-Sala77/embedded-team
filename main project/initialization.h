@@ -153,3 +153,17 @@
 		NVIC_ST_CTRL_R =0x05;
 		while ((NVIC_ST_CTRL_R&0x00010000)==0);
 		}
+		
+		void SW3_INIT (){
+		SYSCTL_RCGCGPIO_R |= 0x10; // PortE clock enable
+		while ((SYSCTL_PRGPIO_R & 0x10)==0); //Delay
+		GPIO_PORTE_CR_R |= 0x01; // Allow changes to PE0.
+		GPIO_PORTE_AMSEL_R &= ~0x01; // Disable analog function
+		GPIO_PORTE_AFSEL_R &= ~0x01; // No alternate function
+		GPIO_PORTE_PCTL_R &= ~0x0000000F; // GPIO clear bit PCTL
+		GPIO_PORTE_PUR_R |=0X01;
+		GPIO_PORTE_DIR_R &= ~0x01; // PE0 INPUT
+		GPIO_PORTE_DEN_R |= 0x01; // Enable digital pins PE0
+		GPIO_PORTE_DATA_R |= 0x01; // Initialize PIN E0 TO BE OFF
+
+		}

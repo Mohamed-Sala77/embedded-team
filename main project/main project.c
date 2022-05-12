@@ -19,14 +19,7 @@ GPIO_PORTF_DIR_R |= 0x0E; // PF321 output
 GPIO_PORTF_DEN_R |= 0x0E; // Enable digital pins PF4-PF0
 GPIO_PORTF_DATA_R |=0x0E; // Initialize LEDs to be off
 }
-void systick_init(unsigned long num)
-{
-	NVIC_ST_CTRL_R =0x00;//disable 
-	NVIC_ST_RELOAD_R = num-1;
-	NVIC_ST_CURRENT_R = 0;
-	NVIC_ST_CTRL_R =0x05;
-	while ((NVIC_ST_CTRL_R&0x00010000)==0);
-}
+
 void systickrep(unsigned long num)
 {
 	int i;
