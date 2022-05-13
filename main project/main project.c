@@ -1,40 +1,154 @@
 #include "Io.h" 
+#include <math.h>
 #include "initialization.h" 
 #include "tm4c123gh6pm2.h" 
-#define NVIC_ST_CTRL_R          (*((volatile unsigned long *)0xE000E010))
-#define NVIC_ST_RELOAD_R        (*((volatile unsigned long *)0xE000E014))
-#define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))
+#include "functions.h" 
 
-
-void SystemInit(void){
-
-SYSCTL_RCGCGPIO_R |= 0x20; // PortF clock enable
-while ((SYSCTL_PRGPIO_R & 0x20)==0); //Delay
-GPIO_PORTF_LOCK_R = 0x4C4F434B; // Unlock PortF Commit register
-GPIO_PORTF_CR_R |= 0x0E; // Allow changes to PF1
-GPIO_PORTF_AMSEL_R &= ~0x0E; // Disable analog function
-GPIO_PORTF_PCTL_R &= ~0x0000FFF0; // GPIO clear bit PCTL
-GPIO_PORTF_AFSEL_R &= ~0x0E; // No alternate function
-GPIO_PORTF_DIR_R |= 0x0E; // PF321 output
-GPIO_PORTF_DEN_R |= 0x0E; // Enable digital pins PF4-PF0
-GPIO_PORTF_DATA_R |=0x0E; // Initialize LEDs to be off
-}
-
-void systickrep(unsigned long num)
-{
-	int i;
-	for(i=0;i<num ;i++){
-	systick_init(16000);}
-	
-}
 int main(){
-	int i ;
-	SystemInit();
-	  systickrep(1000);
-	for(i=0;i<7;i++){
-		GPIO_PORTF_DATA_R= GPIO_PORTF_DATA_R ^ 0x0E;
-		systickrep(1000);
-	}
+	//MAIN_INIT
+	//ON LCD () "PLZ ENTER SYMPOL"
+    char orded = //KEYPAD_INP;
+	switch (orded)
+	{
+	case 'A':
+		//CLEAR LCD
+		//PRINT "POPCORN"
+		NUM_SEC (2);
+		//CLEAR LCD
+		//PRINT 1 MIN
+		NUM_SEC (2);
+		while (1)
+		{
+			if (GPIO_PORTE_DATA_R == 0x01)
+		{
+			if (GPIO_PORTF_DATA_R & 0X01 ==0;)
+			{
+				NUM_MIN(1);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			else // ON LCD "PLZ PUSH START"
+		}
+		else // ON LCD "PLZ CLOSE THE DOOR"
+		}
+		break;
+	
 
+		case 'B':
+		char weight=0;
+		float BEEF_TIME;
+		int int_Btime;
+		float frac_Btime;
+		int sec_Btime;
+		// ON LCD "Beef weight?
+		weight=//  FROM KEYBAD INPUT
+		//keypad out 
+		NUM_SEC(2);
+		//lcd clear
+        while(weight==0){};
+		BEEF_TIME=MIN_BEEF(weight);
+		int_Btime=BEEF_TIME;
+		frac_Btime=BEEF_TIME-int_Btime;
+		sec_Btime=frac_Btime*60;
+					
+		while(1){
+		if (BEEF_TIME<=4.5)
+		{
+			if (GPIO_PORTE_DATA_R == 0x01)
+		{
+			if (GPIO_PORTF_DATA_R & 0X01 ==0;)
+			{
+				//on lcd time
+				NUM_MIN(int_Btime);
+				NUM_SEC(sec_Btime);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			else // ON LCD "PLZ PUSH START"
+		}
+		else // ON LCD "PLZ CLOSE THE DOOR"
+		}
+		else
+		{
+			//plz frrom 1 TO 9
+			NUM_SEC(2);
+		}				 
+		}
+		break;
+
+		case 'c':
+		char weight=0;
+		float chicken_TIME;
+		int int_ctime;
+		float frac_ctime;
+		int sec_ctime;
+		// ON LCD "Beef weight?
+		weight=//  FROM KEYBAD INPUT
+		//keypad out 
+		NUM_SEC(2);
+		//lcd clear
+        while(weight==0){/*err*/};
+		chicken_TIME=MIN_CHICKEN(weight);
+		int_ctime=chicken_TIME;
+		frac_ctime=chicken_TIME-int_ctime;
+		sec_ctime=frac_ctime*60;
+					
+		while(1){
+		if (chicken_TIME<=1.8)
+		{
+			if (GPIO_PORTE_DATA_R == 0x01)
+		{
+			if (GPIO_PORTF_DATA_R & 0X01 ==0;)
+			{
+				//on lcd time
+				NUM_MIN(int_ctime);
+				NUM_SEC(sec_ctime);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			else // ON LCD "PLZ PUSH START"
+		}
+		else // ON LCD "PLZ CLOSE THE DOOR"
+		}
+		else
+		{
+			//plz frrom 1 TO 9
+			NUM_SEC(2);
+		}				 
+		}
+		break;
+
+		case 'D':
+		int Timer_min,Timer_sec;
+		//CLEAR LCD
+		//PRINT "ENTERE TIME"
+		NUM_SEC (2);
+		Timer_min,Timer_sec = TIMER_D();
+		while (1)
+		{
+			if (GPIO_PORTE_DATA_R == 0x01)
+		{
+			if (GPIO_PORTF_DATA_R & 0X01 ==0;)
+			{
+				
+				NUM_MIN(Timer_min);
+				NUM_SEC(Timer_sec);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			else // ON LCD "PLZ PUSH START"
+		}
+		else // ON LCD "PLZ CLOSE THE DOOR"
+			
+		}
+		break;
+
+	default://on lcd error input .
+		break;
+	}
 }
 
