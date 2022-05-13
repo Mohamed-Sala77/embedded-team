@@ -109,7 +109,7 @@
 		}
 		}
 
-        void TIMER_D(){
+        int, int TIMER_D(){
         int n;
         uint32_t i;
         uint32_t j ;
@@ -143,11 +143,11 @@
         total_sec =(i | j) ;
         //LCD"00:total_sec"
             /*LCD"00:total_sec"*/
-            
+          return ((int)total_min , (int)total_sec)  ; 
             
         }
         
-        float NUMBER MIN_BEEF KILO(char kilos  /*GIT_FROM_KYPAD)()*/ )
+        float MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
         float BEEF_TIME;
 
@@ -165,7 +165,7 @@
         
         }
 
-        float NUMBER MIN_CHICKEN KILO(char kilos  /*GIT_FROM_KYPAD)()*/ )
+        float  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
             float CHICKEN_TIME
       while(1){
