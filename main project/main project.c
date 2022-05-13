@@ -32,6 +32,7 @@ int main(){
 		}
 		else // ON LCD "PLZ CLOSE THE DOOR"
 		}
+<<<<<<< HEAD
 		break;
 	
 
@@ -148,6 +149,16 @@ int main(){
 		break;
 
 	default://on lcd error input .
+=======
+		
+		
+		
+		
+		
+		break;
+	
+	default:
+>>>>>>> a79c40aeea16d6425a9d64b75fdb1668839722b9
 		break;
 	}
 }
