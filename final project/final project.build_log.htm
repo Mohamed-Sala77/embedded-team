@@ -10,6 +10,15 @@ Project File Date:  05/14/2022
 Rebuild target 'Target 1'
 assembling startup_TM4C123.s...
 compiling final project.c...
-linking...
-Program Size: Code=3392 RO-data=636 RW-data=0 ZI-data=512  
-".\final project.axf" - 0 Error(s), 0 Warning(s).
+initialization & functions.h(150): error:  #165: too few arguments in function call
+  LCD_command(/*initizalize 5x7*/);
+initialization & functions.h(153): error:  #165: too few arguments in function call
+  LCD_command(/*clear display*/);
+initialization & functions.h(154): error:  #165: too few arguments in function call
+  LCD_command(/*open cursor and blink*/);
+final project.c: 0 warnings, 3 errors
+".\final project.axf" - 3 Error(s), 0 Warning(s).
+Target not created
+</pre>
+</body>
+</html>
