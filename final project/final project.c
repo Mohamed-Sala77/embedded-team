@@ -82,7 +82,14 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 	GPIO_PORTE_DATA_R &= ~0x08; 		// Clear Buzzer {E3 = 0} (No Sound at the beginning)
 }
 //////////////////////////////////////////////////////////////////////
-        void PAUSE(){
+        void MAIN_INIT(){
+		SW3_INIT ();
+		LED_Init ();
+		BUZZER_INIT ();
+		KEYPAD_INIT();
+				}
+
+				void PAUSE(){
 
         //LCD =NVIC_ST_CURRENT_R 
         NVIC_ST_CTRL_R &= 0xFFFFFFFE;
@@ -103,19 +110,17 @@ void BUZZER_INIT (){	// Buzzer ==> E3
     
     
     int check_door (){
-    SW3_INIT ();
-    int SW3=(GPIO_PORTE_DATA_R &0x01);//GET_SW3
+    int SW3=(GPIO_PORTE_DATA_R &0x01);
     while(1){
     if (SW3==ON)
     {
     //TIMER_COUNT
-    return (int)(ON);
-    break; 
+    return (int)(1);
     }
     else if (SW3==OFF)
     {
     //print_str("Close the door for safity plz ? \n");
-    return (int)(OFF);
+    return (int)(0);
     }
 
     }
@@ -125,7 +130,7 @@ void BUZZER_INIT (){	// Buzzer ==> E3
     void NUM_SEC(unsigned long num)
     {
     int i;		
-    for (int i = 0; i < num; i++)
+    for ( i = 0; i < num; i++)
 		{
 			systick_init(0X04C4B400); //ONE SEC
             if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
@@ -152,9 +157,9 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 		{
 		int i;
 		int j;
-			for (int j = 0; j < num; i++)
+			for ( j = 0; j < num; i++)
 			{
-			for (int i = 0; i < 60; i++)
+			for ( i = 0; i < 60; i++)
 			{
 				NUM_SEC(1); //ONE SEC
                 // if (/*LCD "00:00"*/) break;
@@ -175,9 +180,7 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 		}
 
      void LED_BLINK(){
-		
 		while(1){
-        LED_Init () // PUT IN MAIN INIT ;
 		GPIO_PORTF_DATA_R^= 0x0E;
 		NUM_SEC(1);
 			//if (/*00:00*/)break;
@@ -185,22 +188,19 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 		}
 		}
 
-        int TIMER_D(){
-        int n;
+        void TIMER_D(int*total_min,int*total_sec){
         uint32_t i;
         uint32_t j ;
-        uint32_t total_min ;
-        uint32_t total_sec ;
         
          i=//GIT_FROM_KYPAD)();
          //LCD"00:0I"
          j=i<<8;
-         i=//GIT_FROM_KYPAD)()
+         i=0;//GIT_FROM_KYPAD)()
          
         
-        total_min =(i | j) ;
+        *total_min =(i | j) ;
         while(1){
-        if(total_min<=30){
+        if(*total_min<=30){
             /*LCD"total_min:00"*/
             
             break;
@@ -214,12 +214,11 @@ void BUZZER_INIT (){	// Buzzer ==> E3
          i=//GIT_FROM_KYPAD();
         //LCD"00:0I"
          j=i<<8 ;
-         i=//GIT_FROM_KYPAD();
+         i=0;//GIT_FROM_KYPAD();
          
-        total_sec =(i | j) ;
+        *total_sec =(i | j) ;
         //LCD"00:total_sec"
             /*LCD"00:total_sec"*/
-          return ((int)total_min , (int)total_sec)  ; 
             
         }
         
@@ -231,7 +230,6 @@ void BUZZER_INIT (){	// Buzzer ==> E3
         if (kilos<=9){
             BEEF_TIME=0.5*kilos;
         return (float) (BEEF_TIME);
-        break;
         }
         else
         {
@@ -248,7 +246,6 @@ void BUZZER_INIT (){	// Buzzer ==> E3
         if (kilos<=9){
             CHICKEN_TIME=0.2*kilos;
         return (float) (CHICKEN_TIME) ;
-        break;
         }
         else
         {
@@ -262,19 +259,21 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 ///////////////////////////////////////////////
 
 int main(){
-	//MAIN_INIT
-	//ON LCD () "PLZ ENTER SYMPOL"
-    char orded =0;	//KEYPAD_INP;
 		char weight=0;
-		float BEEF_TIME;
+		double BEEF_TIME;
 		int int_Btime;
-		float frac_Btime;
+		double frac_Btime;
 		int sec_Btime;
-		float chicken_TIME;
+		double chicken_TIME;
 		int int_ctime;
-		float frac_ctime;
+		double frac_ctime;
 		int sec_ctime;
 		int Timer_min,Timer_sec;
+		char orded =0;	//KEYPAD_INP;
+		MAIN_INIT();
+	//ON LCD () "PLZ ENTER SYMPOL"
+		
+    
 	switch (orded)
 	{
 		
@@ -287,7 +286,7 @@ int main(){
 		NUM_SEC (2);
 		while (1)
 		{
-			if (GPIO_PORTE_DATA_R == 0x01)
+			if (check_door ())
 		{
 			if ((GPIO_PORTF_DATA_R & 0X01 )==0)
 			{
@@ -318,9 +317,9 @@ int main(){
 		while(1){
 		if (BEEF_TIME<=4.5)
 		{
-			if (GPIO_PORTE_DATA_R == 0x01)
+			if (check_door ())
 		{
-			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
+			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				//on lcd time
 				NUM_MIN(int_Btime);
@@ -356,9 +355,9 @@ int main(){
 		while(1){
 		if (chicken_TIME<=1.8)
 		{
-			if (GPIO_PORTE_DATA_R == 0x01)
+			if (check_door ())
 		{
-			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
+			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				//on lcd time
 				NUM_MIN(int_ctime);
@@ -383,10 +382,10 @@ int main(){
 		//CLEAR LCD
 		//PRINT "ENTERE TIME"
 		NUM_SEC (2);
-		Timer_min,Timer_sec = TIMER_D();
+		TIMER_D(&Timer_min,&Timer_sec );
 		while (1)
 		{
-			if (GPIO_PORTE_DATA_R == 0x01)
+			if (check_door ())
 		{
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
 			{
