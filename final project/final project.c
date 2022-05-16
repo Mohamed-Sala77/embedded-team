@@ -25,6 +25,7 @@ int main(){
 	{
 		
 	case 'A':
+	case 'a':
 		//CLEAR LCD
 		//PRINT "POPCORN"
 		NUM_SEC (2);
@@ -49,6 +50,7 @@ int main(){
 		}
 		break;
 		case 'B':
+		case 'b':
 		LCD_ascii("Beef weight?");
 		weight=0;//  FROM KEYBAD INPUT
 		//keypad out 
@@ -87,6 +89,7 @@ int main(){
 		break;
 
 		case 'c':
+		case 'C':
 		// ON LCD "Beef weight?
 		weight=0;//  FROM KEYBAD INPUT
 		//keypad out 
@@ -125,6 +128,7 @@ int main(){
 		break;
 
 		case 'D':
+		case 'd':
 		//CLEAR LCD
 		//PRINT "ENTERE TIME"
 		NUM_SEC (2);

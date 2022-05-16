@@ -2,7 +2,6 @@
 #include "tm4c123gh6pm2.h" 
 #include "stdint.h"
 #include "string.h"
- enum CASE {OFF=0 , ON=1};
 #define NVIC_ST_CTRL_R          (*((volatile unsigned long *)0xE000E010))
 #define NVIC_ST_RELOAD_R        (*((volatile unsigned long *)0xE000E014))
 #define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))	
@@ -105,9 +104,9 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 
 void LCD_enable(){
 GPIO_PORTB_DATA_R |=enable;
-systick_init(0x061a80);
+systick_init(80000);
 GPIO_PORTB_DATA_R &= ~enable;
-systick_init(0x027100);
+systick_init(32000);
 }
 void LCD_write (unsigned char data, unsigned char control_write_select){
  data &= 0xF0; /*take upperpart of data*/
@@ -156,6 +155,7 @@ LCD_command(/*open cursor and blink*/);
 //////////////////////////////////////////////////////////////////////
         void MAIN_INIT(){
 		SW3_INIT ();
+		SWICH_Init()
 		LED_Init ();
 		BUZZER_INIT ();
 		KEYPAD_INIT();
@@ -184,12 +184,12 @@ LCD_command(/*open cursor and blink*/);
     int check_door (){
     int SW3=(GPIO_PORTE_DATA_R &0x01);
     while(1){
-    if (SW3==ON)
+    if (SW3==0x00)
     {
     //TIMER_COUNT
     return (int)(1);
     }
-    else if (SW3==OFF)
+    else 
     {
     //print_str("Close the door for safity plz ? \n");
     return (int)(0);
@@ -204,7 +204,7 @@ LCD_command(/*open cursor and blink*/);
     int i;		
     for ( i = 0; i < num; i++)
 		{
-			systick_init(0X04C4B400); //ONE SEC
+			systick_init(0X00F42400); //ONE SEC
             if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
             {
                void PAUSE();
@@ -294,34 +294,34 @@ LCD_command(/*open cursor and blink*/);
             
         }
         
-        float MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
+        double MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
-        float BEEF_TIME;
+        double BEEF_TIME;
 
         while(1){
         if (kilos<=9){
             BEEF_TIME=0.5*kilos;
-        return (float) (BEEF_TIME);
+        return (double) (BEEF_TIME);
         }
         else
         {
-         return (char) 10 ;  //???? ?? 4.5 ???? ???? ???? ???? 0
+         return (double) 10 ;  //???? ?? 4.5 ???? ???? ???? ???? 0
         }
         }
         
         }
 
-        float  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
+        double  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
-            float CHICKEN_TIME ;
+            double CHICKEN_TIME ;
       while(1){
         if (kilos<=9){
             CHICKEN_TIME=0.2*kilos;
-        return (float) (CHICKEN_TIME) ;
+        return (double) (CHICKEN_TIME) ;
         }
         else
         {
-         return (char) 10 ;  //???? ?? 1.8 ???? ???? ???? ???? 0
+         return (double) 10 ;  //???? ?? 1.8 ???? ???? ???? ???? 0
         }
         }
         }
