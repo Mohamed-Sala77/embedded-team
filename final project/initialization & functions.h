@@ -70,16 +70,27 @@ void LED_Init()
 
 		}
 		
-void KEYPAD_INIT(){  	// PORTD  Completely
+void KEYPAD_ROWS_INIT(){  	// PORT D (0 --> 3) ==> Keypad Rows
   SYSCTL_RCGCGPIO_R |= 0x08;
   while((SYSCTL_PRGPIO_R & 0x08) == 0);
   GPIO_PORTD_LOCK_R=0x4C4F434B;
-	GPIO_PORTD_CR_R |=0xFF;
-	GPIO_PORTD_DEN_R |=0xFF;
-  GPIO_PORTD_PUR_R |= 0xF0;		// Pins(4 --> 7) Pull Up Resistors
-	GPIO_PORTD_AFSEL_R &= ~0xFF;
-	GPIO_PORTD_PCTL_R &= ~0xFFFFFFFF;
-  GPIO_PORTD_AMSEL_R &= ~0xFF;
+	GPIO_PORTD_CR_R |=0x0F;
+	GPIO_PORTD_DEN_R |=0x0F;
+	GPIO_PORTD_AFSEL_R &= ~0x0F;
+	GPIO_PORTD_PCTL_R &= ~0x0000FFFF;
+  GPIO_PORTD_AMSEL_R &= ~0x0F;
+}			
+
+void KEYPAD_COLUMNS_INIT(){  	// PORT A (4 --> 7) ==> Keypad Columns
+  SYSCTL_RCGCGPIO_R |= 0x01;
+  while((SYSCTL_PRGPIO_R & 0x01) == 0);
+  GPIO_PORTA_LOCK_R=0x4C4F434B;
+	GPIO_PORTA_CR_R |=0xF0;
+	GPIO_PORTA_DEN_R |=0xF0;
+  GPIO_PORTA_PUR_R |= 0xF0;		// Pins(4 --> 7) Pull Up Resistors
+	GPIO_PORTA_AFSEL_R &= ~0xF0;
+	GPIO_PORTA_PCTL_R &= ~0xFFFF0000;
+  GPIO_PORTA_AMSEL_R &= ~0xF0;
 }			
 
 void BUZZER_INIT (){	// Buzzer ==> E3
@@ -91,11 +102,9 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 	GPIO_PORTE_AFSEL_R &= ~0x08; 
 	GPIO_PORTE_PCTL_R &= ~0x00F000; 
 	GPIO_PORTE_AMSEL_R &= ~0x08;
-	GPIO_PORTE_DIR_R |= 0x08; 			// Buzzer ==> Output 
-	GPIO_PORTE_DATA_R &= ~0x08; 		// Clear Buzzer {E3 = 0} (No Sound at the beginning)
+	GPIO_PORTE_DIR_R |= 0x08; 		// Buzzer ==> Output 
+	GPIO_PORTE_DATA_R &= ~0x08; 	// Clear Buzzer {E3 = 0} (No Sound at the beginning)
 }
-
-
 
 void B_Init()
 		{
