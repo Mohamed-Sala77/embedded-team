@@ -4,12 +4,25 @@
 #include "string.h"
 #define NVIC_ST_CTRL_R          (*((volatile unsigned long *)0xE000E010))
 #define NVIC_ST_RELOAD_R        (*((volatile unsigned long *)0xE000E014))
-#define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))	
+#define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))
+#define clear_display     0x01
+#define cursorBlink       0x0F
+#define line              0x38
+#define moveCursorRight   0x06
+#define FirstRow          0x80
+#define SecondRow         0xC0
+#define fourbit           0x28
+#define eightbit          0x38
+#define write_data        0x02
+#define write_command     0x00
+#define enable            0x01	
 		
 void LED_Init()
 		{
 		SYSCTL_RCGCGPIO_R |= 0x20;             //Port F Clock enable
 		while((SYSCTL_PRGPIO_R & 0x20)==0){};  //Delay
+		 GPIO_PORTD_LOCK_R=0x4C4F434B;
+		 GPIO_PORTD_CR_R |=0x0E;
 		GPIO_PORTF_DIR_R |= 0x0E;              //Enable Output
 		GPIO_PORTF_AFSEL_R &= ~(0x0E);         //No alternate function
 		GPIO_PORTF_PCTL_R &= ~(0x0000FFF0);    //Clear PCTL bit
@@ -45,6 +58,7 @@ void LED_Init()
 		void SW3_INIT (){
 		SYSCTL_RCGCGPIO_R |= 0x10; // PortE clock enable
 		while ((SYSCTL_PRGPIO_R & 0x10)==0); //Delay
+		 GPIO_PORTD_LOCK_R=0x4C4F434B;
 		GPIO_PORTE_CR_R |= 0x01; // Allow changes to PE0.
 		GPIO_PORTE_AMSEL_R &= ~0x01; // Disable analog function
 		GPIO_PORTE_AFSEL_R &= ~0x01; // No alternate function
@@ -80,28 +94,20 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 	GPIO_PORTE_DIR_R |= 0x08; 			// Buzzer ==> Output 
 	GPIO_PORTE_DATA_R &= ~0x08; 		// Clear Buzzer {E3 = 0} (No Sound at the beginning)
 }
-/*#define clear_display     0x01
-#define returnHome        0x02
-#define moveCursorRight   0x06
-#define moveCursorLeft    0x08
-#define shiftDisplayRight 0x1C
-#define shiftDisplayLeft  0x18
-#define cursorBlink       0x0F    
-#define cursorOff         0x0C
-#define cursorOn          0x0E
-#define Entry_mode        0x06
-#define Function_8_bit    0x32
-#define set font          0x20 */
 
-#define moveCursorRight   0x06
-#define FirstRow          0x80
-#define SecondRow         0xC0
-#define fourbit           0x28
-#define eightbit          0x38
-#define write_data        0x02
-#define write_command     0x00
-#define enable            0x01
 
+
+void B_Init()
+		{
+		SYSCTL_RCGCGPIO_R |= 0x02;             //Port F Clock enable
+		while((SYSCTL_PRGPIO_R & 0x02)==0){};  //Delay
+		GPIO_PORTB_DIR_R |= 0xF7;              //Enable Output
+		GPIO_PORTB_AFSEL_R &= ~(0xF7);         //No alternate function
+		GPIO_PORTB_PCTL_R &= ~(0xFFFFF0FF);    //Clear PCTL bit
+		GPIO_PORTB_DEN_R |= 0xF7;              //Enable Digital Pins 3 2 1 
+		GPIO_PORTB_AMSEL_R &= ~(0xF7);         //Disable Analog Mode          //Initialize LEDS to be off 
+		 }
+///////////////////// lCD 		
 void LCD_enable(){
 GPIO_PORTB_DATA_R |=enable;
 systick_init(80000);
@@ -124,6 +130,7 @@ void LCD_display(unsigned char data){
 void LCD_command(unsigned char command){
  LCD_write(command &0xF0,write_command);
  LCD_write(command <<4  ,write_command);
+systick_init(32000);
 }
 void LCD_ascii(char *letter){
 int i;
@@ -132,7 +139,7 @@ for (i=0; letter[i]!=0;i++){
     }
 }
 
-int LCD_cursor(unsigned char row,unsigned char column){
+void LCD_cursor(unsigned char row,unsigned char column){
 unsigned char position=0;
 if(row==1){
 position= FirstRow+column-1;
@@ -141,17 +148,25 @@ else if(row==2){
 position= SecondRow+column-1;
 }
 else position=FirstRow;
-return position;
+LCD_command(position);
 }
-
 void LCD_init(){
-//enable port
-LCD_command(/*initizalize 5x7*/);
+B_Init();
+LCD_command(line);
 LCD_command(fourbit);
 LCD_command(moveCursorRight);
-LCD_command(/*clear display*/);
-LCD_command(/*open cursor and blink*/);
+LCD_command(clear_display);
+LCD_command(cursorBlink);
 }
+int main (){
+	LCD_ascii("00:00");
+}
+/* LCD_enable function gives enable a pulse that lasts for some time(enable acts like latches and read data while clock is high)
+LCD_write is a function that makes writing the ffunctions in four bits mode easier
+LCD_display is a function that will display numbers or letters on screen
+LCD_ascii is the function that will read the letter
+LCD_cursor is a function that controls the cursor location on the 2x16 lcd screen
+LCD_command is a function that gives commands to lcd like on and off and open display and close display*/
 //////////////////////////////////////////////////////////////////////
         void MAIN_INIT(){
 		SW3_INIT ();
@@ -208,7 +223,7 @@ LCD_command(/*open cursor and blink*/);
             if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
             {
                void PAUSE();
-              NUM_SEC(1);
+              systick_init(16000);
                while (1)
                {
                 if((GPIO_PORTF_DATA_R & 0x10)==0){ 
