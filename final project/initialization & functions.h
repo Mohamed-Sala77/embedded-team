@@ -21,8 +21,8 @@ void LED_Init()
 		{
 		SYSCTL_RCGCGPIO_R |= 0x20;             //Port F Clock enable
 		while((SYSCTL_PRGPIO_R & 0x20)==0){};  //Delay
-		 GPIO_PORTD_LOCK_R=0x4C4F434B;
-		 GPIO_PORTD_CR_R |=0x0E;
+		GPIO_PORTF_LOCK_R=0x4C4F434B;
+	  GPIO_PORTF_CR_R |=0x0E;
 		GPIO_PORTF_DIR_R |= 0x0E;              //Enable Output
 		GPIO_PORTF_AFSEL_R &= ~(0x0E);         //No alternate function
 		GPIO_PORTF_PCTL_R &= ~(0x0000FFF0);    //Clear PCTL bit
@@ -58,7 +58,7 @@ void LED_Init()
 		void SW3_INIT (){
 		SYSCTL_RCGCGPIO_R |= 0x10; // PortE clock enable
 		while ((SYSCTL_PRGPIO_R & 0x10)==0); //Delay
-		 GPIO_PORTD_LOCK_R=0x4C4F434B;
+		GPIO_PORTE_LOCK_R=0x4C4F434B;
 		GPIO_PORTE_CR_R |= 0x01; // Allow changes to PE0.
 		GPIO_PORTE_AMSEL_R &= ~0x01; // Disable analog function
 		GPIO_PORTE_AFSEL_R &= ~0x01; // No alternate function
@@ -179,10 +179,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 //////////////////////////////////////////////////////////////////////
         void MAIN_INIT(){
 		SW3_INIT ();
-		SWICH_Init()
+		SWICH_Init();
 		LED_Init ();
 		BUZZER_INIT ();
-		KEYPAD_INIT();
+		KEYPAD_ROWS_INIT();
+		KEYPAD_COLUMNS_INIT();			
 				}
 
 				void PAUSE(){
