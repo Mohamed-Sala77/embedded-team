@@ -326,37 +326,46 @@ LCD_command is a function that gives commands to lcd like on and off and open di
             
         }
         
-        double MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
+        int MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
-        double BEEF_TIME;
+        int BEEF_TIME;
 
         while(1){
         if (kilos<=9){
-            BEEF_TIME=0.5*kilos;
-        return (double) (BEEF_TIME);
+            BEEF_TIME=30*kilos;//in sec
+        return (int) (BEEF_TIME);
         }
         else
         {
-         return (double) 10 ;  //???? ?? 4.5 ???? ???? ???? ???? 0
+           //enter nom bet 1:9
         }
         }
         
         }
 
-        double  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
+        int  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
-            double CHICKEN_TIME ;
+            int CHICKEN_TIME ;
       while(1){
         if (kilos<=9){
-            CHICKEN_TIME=0.2*kilos;
-        return (double) (CHICKEN_TIME) ;
+            CHICKEN_TIME=12*kilos;
+        return (int) (CHICKEN_TIME) ;
         }
         else
         {
-         return (double) 10 ;  //???? ?? 1.8 ???? ???? ???? ???? 0
+         //enter nom bet 1:9
         }
         }
         }
+
+		void calc_min(int*sec , int*min){
+		while ((*sec)>=60)
+		{
+			*sec-=60;
+			(*min)++;
+		}
+		
+		}
 
 		unsigned char Keypad_Out(){
 		unsigned char Keypad_Keys [4][4] = {{'1', '2', '3', 'A'}, {'4', '5', '6', 'B'}, {'7', '8', '9', 'C'}, {'*', '0', '#', 'D'}}; // Keys Init.
