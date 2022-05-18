@@ -88,6 +88,44 @@ int main(){
 		}
 		break;
 
+		case 'c':
+		case 'C':
+		// ON LCD "Beef weight?
+		weight=0;//  FROM KEYBAD INPUT
+		//keypad out 
+		NUM_SEC(2);
+		//lcd clear
+        while(weight==0){/*err*/};
+		chicken_TIME=MIN_CHICKEN(weight);
+		int_ctime=chicken_TIME;
+		frac_ctime=chicken_TIME-int_ctime;
+		sec_ctime=frac_ctime*60;
+					
+		while(1){
+		if (chicken_TIME<=1.8)
+		{
+			if (check_door ())
+		{
+			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
+			{
+				//on lcd time
+				NUM_MIN(int_ctime);
+				NUM_SEC(sec_ctime);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			//else  ON LCD "PLZ PUSH START"
+		}
+		//else ON LCD "PLZ CLOSE THE DOOR"
+		}
+		else
+		{
+			//plz frrom 1 TO 9
+			NUM_SEC(2);
+		}				 
+		}
+		break;
 
 }
 
