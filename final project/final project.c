@@ -127,5 +127,35 @@ int main(){
 		}
 		break;
 
+		case 'D':
+		case 'd':
+		//CLEAR LCD
+		//PRINT "ENTERE TIME"
+		NUM_SEC (2);
+		TIMER_D(&Timer_min,&Timer_sec );
+		while (1)
+		{
+			if (check_door ())
+		{
+			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
+			{
+				
+				NUM_MIN(Timer_min);
+				NUM_SEC(Timer_sec);
+				LED_END();
+				// END "bUZZ" 
+				break;
+			}
+			//else // ON LCD "PLZ PUSH START"
+		}
+		//else // ON LCD "PLZ CLOSE THE DOOR"
+			
+		}
+		break;
+
+	//default://on lcd error input .
+
+		//break;
+	}
 }
 
