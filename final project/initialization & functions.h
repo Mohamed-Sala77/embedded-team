@@ -108,15 +108,26 @@ void BUZZER_INIT (){	// Buzzer ==> E3
 
 void B_Init()
 		{
-		SYSCTL_RCGCGPIO_R |= 0x02;             //Port F Clock enable
+		SYSCTL_RCGCGPIO_R |= 0x02;             //Port B Clock enable
 		while((SYSCTL_PRGPIO_R & 0x02)==0){};  //Delay
+		GPIO_PORTB_LOCK_R=0x4C4F434B;
+		GPIO_PORTB_CR_R |=0xF7;
 		GPIO_PORTB_DIR_R |= 0xF7;              //Enable Output
 		GPIO_PORTB_AFSEL_R &= ~(0xF7);         //No alternate function
 		GPIO_PORTB_PCTL_R &= ~(0xFFFFF0FF);    //Clear PCTL bit
 		GPIO_PORTB_DEN_R |= 0xF7;              //Enable Digital Pins 3 2 1 
 		GPIO_PORTB_AMSEL_R &= ~(0xF7);         //Disable Analog Mode          //Initialize LEDS to be off 
 		 }
-///////////////////// lCD 		
+
+void systick_init(unsigned long num)
+		{
+		NVIC_ST_CTRL_R =0x00;//disable 
+		NVIC_ST_RELOAD_R = num-1;
+		NVIC_ST_CURRENT_R = 0;
+		NVIC_ST_CTRL_R =0x05;
+		while ((NVIC_ST_CTRL_R&0x00010000)==0);
+		}
+		
 void LCD_enable(){
 GPIO_PORTB_DATA_R |=enable;
 systick_init(80000);
@@ -125,7 +136,7 @@ systick_init(32000);
 }
 void LCD_write (unsigned char data, unsigned char control_write_select){
  data &= 0xF0; /*take upperpart of data*/
- control_write_select &= 0x0A;                         /*take lower part of control*/
+ control_write_select &= 0X0F;                         /*take lower part of control*/
  GPIO_PORTB_DATA_R = data|control_write_select;        /*send data to be written or command to be executed*/ 
  LCD_enable();   /* give enable and delay*/
  GPIO_PORTB_DATA_R = 0;  //clear port data        
@@ -160,23 +171,19 @@ else position=FirstRow;
 LCD_command(position);
 }
 void LCD_init(){
-B_Init();
 LCD_command(line);
 LCD_command(fourbit);
 LCD_command(moveCursorRight);
 LCD_command(clear_display);
 LCD_command(cursorBlink);
 }
-int main (){
-	LCD_ascii("00:00");
-}
+
 /* LCD_enable function gives enable a pulse that lasts for some time(enable acts like latches and read data while clock is high)
 LCD_write is a function that makes writing the ffunctions in four bits mode easier
 LCD_display is a function that will display numbers or letters on screen
 LCD_ascii is the function that will read the letter
 LCD_cursor is a function that controls the cursor location on the 2x16 lcd screen
 LCD_command is a function that gives commands to lcd like on and off and open display and close display*/
-//////////////////////////////////////////////////////////////////////
         void MAIN_INIT(){
 		SW3_INIT ();
 		SWICH_Init();
