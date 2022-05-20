@@ -228,9 +228,9 @@ LCD_command is a function that gives commands to lcd like on and off and open di
     }
 
     }
-    //LED_BLINK
-    //BUZZ
     }
+
+
     void NUM_SEC(unsigned long num)
     {
     int i;		
@@ -296,14 +296,16 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         uint32_t i;
         uint32_t j ;
         
-         i=//GIT_FROM_KYPAD)();
+         
+        while(1){
+			//clear lcd
+		i=//GIT_FROM_KYPAD)();
          //LCD"00:0I"
-         j=i<<8;
-         i=0;//GIT_FROM_KYPAD)()
+         j=i*10;
+         i=//GIT_FROM_KYPAD)();
          
         
-        *total_min =(i | j) ;
-        while(1){
+        *total_min =(i + j) ;
         if(*total_min<=30){
             /*LCD"total_min:00"*/
             
@@ -317,12 +319,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         
          i=//GIT_FROM_KYPAD();
         //LCD"00:0I"
-         j=i<<8 ;
+         j=i*10 ;
          i=0;//GIT_FROM_KYPAD();
          
-        *total_sec =(i | j) ;
-        //LCD"00:total_sec"
-            /*LCD"00:total_sec"*/
+        *total_sec =(i + j) ;
+        //LCD"total_min:total_sec"
             
         }
         
