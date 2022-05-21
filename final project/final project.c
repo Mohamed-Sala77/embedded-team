@@ -7,9 +7,10 @@
 
 int main(){
 		int weight=0 ;
-		int BEEF_SEC,BEEF_MIN;
+		int BEEF_SEC=0,BEEF_MIN=0;
 		int chicken_SEC,chicken_MIN;
 		int Timer_min,Timer_sec;
+		int door ;
 		char order =Keypad_Out();
 		MAIN_INIT();
 	//ON LCD () "PLZ ENTER SYMPOL"
@@ -23,15 +24,17 @@ int main(){
 		//CLEAR LCD
 		//PRINT "POPCORN"
 		NUM_SEC (2);
-		//CLEAR LCD
-		//PRINT 1 MIN
-		NUM_SEC (2);
 		while (1)
 		{
-			if (check_door ())
+			door=check_door ();
+			if (door==1)
 		{
+			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01 )==0)
 			{
+					//CLEAR LCD
+					//PRINT 1 MIN
+					NUM_SEC (2);
                 LCD_ascii("01:00");//nem_sec decrease
 				NUM_MIN(1);
 				LED_END();
@@ -39,24 +42,22 @@ int main(){
 				break;
 			}
 			LCD_ascii("PLZ PUSH START" );
+			}
+			 
 		}
-		LCD_ascii("PLZ CLOSE THE DOOR");
+		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
 		}
 		break;
 
 		case 'B':
 		case 'b':
 		LCD_ascii("Beef weight?");
-		weight=0;//  FROM KEYBAD INPUT
-		//lcd out 
-		NUM_SEC(2);
-		//lcd clear
-        while(weight==0){};
 		BEEF_SEC=MIN_BEEF(weight);			
 		while(1){
-		
-			if (check_door ())
+			door=check_door ();
+			if (door==1)
 		{
+			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{ 
 				calc_min(&BEEF_SEC ,&BEEF_MIN);
@@ -68,8 +69,10 @@ int main(){
 				break;
 			}
 			//else  ON LCD "PLZ PUSH START"
+			}
 		}
-		//else  ON LCD "PLZ CLOSE THE DOOR"
+		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
+		
 						 
 		}
 		break;
@@ -77,17 +80,13 @@ int main(){
 		case 'c':
 		case 'C':
 		// ON LCD "chicken weight?
-		weight=0;//  FROM KEYBAD INPUT
-		//keypad out 
-		NUM_SEC(2);
-		//lcd clear
-        while(weight==0){/*err*/};
 		chicken_SEC=MIN_CHICKEN(weight);
 					
 		while(1){
-		
-			if (check_door ())
+			door=check_door ();
+			if (door==1)
 		{
+			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				calc_min(&chicken_SEC,&chicken_MIN);
@@ -99,8 +98,9 @@ int main(){
 				break;
 			}
 			//else  ON LCD "PLZ PUSH START"
+			}
 		}
-		//else ON LCD "PLZ CLOSE THE DOOR"
+			 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
 						 
 		}
 		break;
@@ -113,8 +113,10 @@ int main(){
 		TIMER_D(&Timer_min,&Timer_sec );
 		while (1)
 		{
-			if (check_door ())
+			door=check_door ();
+			if (door==1)
 		{
+			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
 			{
 				
@@ -125,8 +127,9 @@ int main(){
 				break;
 			}
 			//else // ON LCD "PLZ PUSH START"
+			}
 		}
-		//else // ON LCD "PLZ CLOSE THE DOOR"
+		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
 			
 		}
 		break;

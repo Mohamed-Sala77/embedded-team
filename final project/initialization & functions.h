@@ -2,7 +2,6 @@
 #include "tm4c123gh6pm2.h" 
 #include "stdint.h"
 #include "string.h"
-#include "math.h"
 #define NVIC_ST_CTRL_R          (*((volatile unsigned long *)0xE000E010))
 #define NVIC_ST_RELOAD_R        (*((volatile unsigned long *)0xE000E014))
 #define NVIC_ST_CURRENT_R       (*((volatile unsigned long *)0xE000E018))
@@ -120,14 +119,6 @@ void B_Init()
 		GPIO_PORTB_AMSEL_R &= ~(0xF7);         //Disable Analog Mode          //Initialize LEDS to be off 
 		 }
 
-void systick_init(unsigned long num)
-		{
-		NVIC_ST_CTRL_R =0x00;//disable 
-		NVIC_ST_RELOAD_R = num-1;
-		NVIC_ST_CURRENT_R = 0;
-		NVIC_ST_CTRL_R =0x05;
-		while ((NVIC_ST_CTRL_R&0x00010000)==0);
-		}
 		
 void LCD_enable(){
 GPIO_PORTB_DATA_R |=enable;
@@ -216,20 +207,19 @@ LCD_command is a function that gives commands to lcd like on and off and open di
     
     int check_door (){
     int SW3=(GPIO_PORTE_DATA_R &0x01);
-    while(1){
+    
     if (SW3==0x00)
     {
-    //TIMER_COUNT
     return (int)(1);
     }
     else 
     {
-    //print_str("Close the door for safity plz ? \n");
+    //print_str("Close the door plz ? \n");
     return (int)(0);
     }
 
     }
-    }
+    
 
 
     void NUM_SEC(unsigned long num)
@@ -331,9 +321,13 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         int MIN_BEEF (char kilos  /*GIT_FROM_KYPAD)()*/ )
         {
         int BEEF_TIME;
-
+		
         while(1){
-        if (kilos<=9){
+		kilos=//  FROM KEYBAD INPUT;
+        if ((kilos<=9) & (kilos>0)){
+		//lcd out 
+		NUM_SEC(2);
+		//lcd clear
             BEEF_TIME=30*kilos;//in sec
         return (int) (BEEF_TIME);
         }
@@ -349,7 +343,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         {
             int CHICKEN_TIME ;
       while(1){
-        if (kilos<=9){
+		  kilos=//  FROM KEYBAD INPUT;
+        if ((kilos<=9) &(kilos>0)){
+			//lcd out 
+		NUM_SEC(2);
+		//lcd clear
             CHICKEN_TIME=12*kilos;
         return (int) (CHICKEN_TIME) ;
         }
@@ -401,5 +399,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		void Buzzer_OFF(){
 		GPIO_PORTE_DATA_R &= ~0x08;
 		}	
+
+		void Buzz (){
+			Buzzer_ON();
+			NUM_SEC(2);
+			Buzzer_OFF();
+		}
    
         
