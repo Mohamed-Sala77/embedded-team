@@ -36,7 +36,7 @@ int main(){
 					//PRINT 1 MIN
 					NUM_SEC (2);
                 LCD_ascii("01:00");//nem_sec decrease
-				NUM_MIN(1);
+				Timer(1,0);
 				LED_END();
 				// END "bUZZ" 
 				break;
@@ -61,8 +61,7 @@ int main(){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{ 
 				calc_min(&BEEF_SEC ,&BEEF_MIN);
-				NUM_MIN(BEEF_MIN);
-				NUM_SEC(BEEF_SEC);
+				Timer(BEEF_MIN,BEEF_SEC);
 				LED_END();
 				// END "bUZZ" 
 				break;
@@ -89,8 +88,7 @@ int main(){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				calc_min(&chicken_SEC,&chicken_MIN);
-				NUM_MIN(chicken_MIN);
-				NUM_SEC(chicken_SEC);
+				Timer(chicken_MIN,chicken_SEC);
 				LED_END();
 				// END "bUZZ" 
 				break;
@@ -120,6 +118,7 @@ int main(){
 				
 				NUM_MIN(Timer_min);
 				NUM_SEC(Timer_sec);
+				Timer(Timer_min,Timer_sec);
 				LED_END();
 				// END "bUZZ" 
 				break;

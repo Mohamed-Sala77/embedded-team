@@ -5,3 +5,4 @@
 .\final project.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\final project.o: initialization & functions.h
 .\final project.o: Io.h
+.\final project.o: C:\Keil\ARM\ARMCC\bin\..\include\math.h

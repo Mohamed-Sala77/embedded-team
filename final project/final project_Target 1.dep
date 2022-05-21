@@ -1,15 +1,16 @@
 Dependencies for Project 'final project', Target 'Target 1': (DO NOT MODIFY !)
 F (.\startup_TM4C123.s)(0x62800E9C)(--cpu Cortex-M4.fp --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123--list .\startup_tm4c123.lst --xref -o .\startup_tm4c123.o --depend .\startup_tm4c123.d)
-F (.\final project.c)(0x6282B268)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-DTM4C123GH6PM-o ".\final project.o" --omf_browse ".\final project.crf" --depend ".\final project.d")
+F (.\final project.c)(0x62895C6D)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-DTM4C123GH6PM-o ".\final project.o" --omf_browse ".\final project.crf" --depend ".\final project.d")
 I (Io.h)(0x627EDEF9)
 I (tm4c123gh6pm2.h)(0x627EDEF9)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C819B4)
 I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C819B4)
-I (initialization & functions.h)(0x6282C3E8)
-F (.\Buzzer.h)(0x627EDEF9)()
+I (initialization & functions.h)(0x62895E94)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C819B4)
+F (.\Buzzer.h)(0x62854625)()
 F (.\functions.h)(0x627EE051)()
 F (.\Io.h)(0x627EDEF9)()
-F (.\keypad.h)(0x627EDEF9)()
+F (.\keypad.h)(0x62854625)()
 F (.\tm4c123gh6pm.h)(0x627EDEF9)()
 F (.\tm4c123gh6pm2.h)(0x627EDEF9)()
-F (.\initialization & functions.h)(0x6282C3E8)()
+F (.\initialization & functions.h)(0x62895E94)()

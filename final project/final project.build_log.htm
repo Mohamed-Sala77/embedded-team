@@ -3,10 +3,46 @@
 <pre>
 <h1>µVision Build Log</h1>
 <h2>Project:</h2>
-D:\Eng ASU\Junior ECE\2nd Semester\Introduction to Embedded Systems\Project_GitHub\embedded-team\final project\final project.uvproj
-Project File Date:  05/18/2022
+C:\Users\p&p\OneDrive - Faculty of Engineering Ain Shams University\Desktop\project\embedded-team\final project\final project.uvproj
+Project File Date:  05/16/2022
 
 <h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling startup_TM4C123.s...
+compiling final project.c...
+initialization & functions.h(425): warning:  #223-D: function "sprintf" declared implicitly
+                      sprintf(fstr,"%i%c%i",min,':',sec);                               
+initialization & functions.h(436): warning:  #223-D: function "sprintf" declared implicitly
+                      sprintf(fstr,"0%i%c%i",min,':',sec);   
+initialization & functions.h(440): warning:  #223-D: function "sprintf" declared implicitly
+                      sprintf(fstr,"0%i%c0%i",min,':',sec);                             
+final project.c: 3 warnings, 0 errors
+linking...
+Program Size: Code=3468 RO-data=652 RW-data=0 ZI-data=512  
+".\final project.axf" - 0 Error(s), 3 Warning(s).
 </pre>
 </body>
 </html>
+              sprintf(fstr,"%i%c%i",min,':',sec);                               
+initialization & functions.h(423): error:  #20: identifier "fstr" is undefined
+                      sprintf(fstr,"%i%c%i",min,':',sec);                               
+initialization & functions.h(434): warning:  #223-D: function "sprintf" declared implicitly
+                      sprintf(fstr,"0%i%c%i",min,':',sec);   
+initialization & functions.h(434): error:  #20: identifier "fstr" is undefined
+                      sprintf(fstr,"0%i%c%i",min,':',sec);   
+initialization & functions.h(438): warning:  #223-D: function "sprintf" declared implicitly
+                      sprintf(fstr,"0%i%c0%i",min,':',sec);                             
+initialization & functions.h(438): error:  #20: identifier "fstr" is undefined
+                      sprintf(fstr,"0%i%c0%i",min,':',sec);                             
+final project.c: 6 warnings, 5 errors
+".\final project.axf" - 5 Error(s), 6 Warning(s).
+Target not created
+tion & functions.h(434): error:  #20: identifier "fstr" is undefined
+                      sprintf(fstr,"0%i%c%i",min,':',sec);   
+initialization & functions.h(437): error:  #127: expected a statement
+                  else if(sec <= 9)
+initialization & functions.h(444): error:  #127: expected a statement
+              }
+final project.c: 8 warnings, 8 errors
+".\final project.axf" - 8 Error(s), 8 Warning(s).
+Target not created

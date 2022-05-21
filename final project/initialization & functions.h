@@ -325,7 +325,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         int BEEF_TIME;
 		
         while(1){
-		kilos=//  FROM KEYBAD INPUT;
+		kilos=0;//  FROM KEYBAD INPUT;
         if ((kilos<=9) & (kilos>0)){
 		//lcd out 
 		NUM_SEC(2);
@@ -341,11 +341,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         
         }
 
-        int  MIN_CHICKEN (char kilos  /*GIT_FROM_KYPAD)()*/ )
+        int  MIN_CHICKEN (int kilos)
         {
             int CHICKEN_TIME ;
       while(1){
-		  kilos=//  FROM KEYBAD INPUT;
+		  kilos=0;//  FROM KEYBAD INPUT;
         if ((kilos<=9) &(kilos>0)){
 			//lcd out 
 		NUM_SEC(2);
@@ -359,6 +359,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         }
         }
         }
+			
 
 		void calc_min(int*sec , int*min){
 		while ((*sec)>=60)
@@ -407,5 +408,46 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 			NUM_SEC(2);
 			Buzzer_OFF();
 		}
+
+		
+void Timer(int time_min,int time_sec){
+	int min,sec;
+	char fstr[10]={0};
+	// time_min ==> Number of Minutes to Start count from it 
+	// time_sec ==> Number of Seconds to Start count from it 
+	
+	    for(min=time_min;min>=0;min--)
+    {
+        if(min > 9)
+            for(sec=time_sec;sec>=0;sec--)
+            {
+                if(sec > 9)
+                    sprintf(fstr,"%i%c%i",min,':',sec);				
+					//LCD_ascii(fstr);													
+                else if(sec <= 9)
+                    sprintf(fstr,"%i%c0%i",min,':',sec);
+					//LCD_ascii(fstr);													
+					NUM_SEC(1);
+            }
+        else if(min <= 9)
+            for(sec=time_sec;sec>=0;sec--)
+            {
+                if(sec > 9){
+                    sprintf(fstr,"0%i%c%i",min,':',sec);   
+										LCD_ascii(fstr);}													
+                    // Delay 1 Second
+                else if(sec <= 9){
+                    sprintf(fstr,"0%i%c0%i",min,':',sec);				
+										LCD_ascii(fstr);}													
+                   NUM_SEC(1);
+                //if(min == 0 & sec == 0)
+                    // Timer is Finished
+					
+            }
+						
+        time_sec = 59;  // To start 2nd iteration in Minutes loop with 59 seconds
+    }
+}
+
    
         
