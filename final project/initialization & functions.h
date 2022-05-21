@@ -299,7 +299,9 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         
         *total_min =(i + j) ;
         if(*total_min<=30){
-            /*LCD"total_min:00"*/
+			/*if(*total_min<10){
+            LCD"0total_min:00"}
+			else LCD"total_min:00"*/
             
             break;
             }
@@ -310,12 +312,11 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 
         
          i=//GIT_FROM_KYPAD();
-        //LCD"00:0I"
+        //LCD"total-min:0I"
          j=i*10 ;
          i=0;//GIT_FROM_KYPAD();
          
         *total_sec =(i + j) ;
-        //LCD"total_min:total_sec"
             
         }
         

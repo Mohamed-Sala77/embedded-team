@@ -9,7 +9,7 @@ int main(){
 		int weight=0 ;
 		int BEEF_SEC=0,BEEF_MIN=0;
 		int chicken_SEC,chicken_MIN;
-		int Timer_min,Timer_sec;
+		int Timer_min=0,Timer_sec=0;
 		int door ;
 		char order =Keypad_Out();
 		MAIN_INIT();
@@ -61,7 +61,6 @@ int main(){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{ 
 				calc_min(&BEEF_SEC ,&BEEF_MIN);
-				//on lcd time
 				NUM_MIN(BEEF_MIN);
 				NUM_SEC(BEEF_SEC);
 				LED_END();
@@ -90,7 +89,6 @@ int main(){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				calc_min(&chicken_SEC,&chicken_MIN);
-				//on lcd time
 				NUM_MIN(chicken_MIN);
 				NUM_SEC(chicken_SEC);
 				LED_END();
