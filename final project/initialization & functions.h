@@ -231,19 +231,19 @@ LCD_command is a function that gives commands to lcd like on and off and open di
     	for ( i = 0; i < num; i++)
 		{
 		systick_init(0X00F42400); //ONE SEC
+		GPIO_PORTF_DATA_R^= 0x0E; // blink
         if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
         {
-    	void PAUSE();
-        systick_init(1600000);
+    	
+        systick_init(1600000); //PAUSE
         	while (1)
         	{
         	if((GPIO_PORTF_DATA_R & 0x10)==0){ 
         		clear(); 
         		return(0); }
         	else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
-        		resume();
-        		break; }
-				else systick_init(0X00F42400);
+        		break; } //resume
+				else systick_init(16000);
         	}
         }
         //if (/*LCD "00:00"*/) break;
@@ -329,7 +329,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		kilos=0;//  FROM KEYBAD INPUT;
         if ((kilos<=9) & (kilos>0)){
 		//lcd out 
-		NUM_SEC(2);
+		NUM_SEC(1);
 		//lcd clear
             BEEF_TIME=30*kilos;//in sec
         return (int) (BEEF_TIME);
@@ -349,7 +349,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		kilos=0;//  FROM KEYBAD INPUT;
         if ((kilos<=9) &(kilos>0)){
 			//lcd out 
-		NUM_SEC(2);
+		NUM_SEC(1);
 		//lcd clear
         CHICKEN_TIME=12*kilos;
         return (int) (CHICKEN_TIME) ;
