@@ -17,7 +17,7 @@
 #define write_data        0x02
 #define write_command     0x00
 #define enable            0x01	
-		
+//////////////////////////////////////{Initlization}//////////////////////////////////////////////////////////////		
 void LED_Init()
 		{
 		SYSCTL_RCGCGPIO_R |= 0x20;             //Port F Clock enable
@@ -70,44 +70,45 @@ void LED_Init()
 		GPIO_PORTE_DATA_R |= 0x01; // Initialize PIN E0 TO BE OFF
 
 		}
-		
-void KEYPAD_ROWS_INIT(){  	// PORT D (0 --> 3) ==> Keypad Rows
-  SYSCTL_RCGCGPIO_R |= 0x08;
-  while((SYSCTL_PRGPIO_R & 0x08) == 0);
-  GPIO_PORTD_LOCK_R=0x4C4F434B;
-	GPIO_PORTD_CR_R |=0x0F;
-	GPIO_PORTD_DEN_R |=0x0F;
-	GPIO_PORTD_AFSEL_R &= ~0x0F;
-	GPIO_PORTD_PCTL_R &= ~0x0000FFFF;
-  GPIO_PORTD_AMSEL_R &= ~0x0F;
-}			
+		///////////////////*Keypad_Initlization*////////////////
+		void KEYPAD_ROWS_INIT(){  	// PORT D (0 --> 3) ==> Keypad Rows
+ 		SYSCTL_RCGCGPIO_R |= 0x08;
+  		while((SYSCTL_PRGPIO_R & 0x08) == 0);
+  		GPIO_PORTD_LOCK_R=0x4C4F434B;
+		GPIO_PORTD_CR_R |=0x0F;
+		GPIO_PORTD_DEN_R |=0x0F;
+		GPIO_PORTD_AFSEL_R &= ~0x0F;
+		GPIO_PORTD_PCTL_R &= ~0x0000FFFF;
+ 		GPIO_PORTD_AMSEL_R &= ~0x0F;
+		}			
 
-void KEYPAD_COLUMNS_INIT(){  	// PORT A (4 --> 7) ==> Keypad Columns
-  SYSCTL_RCGCGPIO_R |= 0x01;
-  while((SYSCTL_PRGPIO_R & 0x01) == 0);
-  GPIO_PORTA_LOCK_R=0x4C4F434B;
-	GPIO_PORTA_CR_R |=0xF0;
-	GPIO_PORTA_DEN_R |=0xF0;
-  GPIO_PORTA_PUR_R |= 0xF0;		// Pins(4 --> 7) Pull Up Resistors
-	GPIO_PORTA_AFSEL_R &= ~0xF0;
-	GPIO_PORTA_PCTL_R &= ~0xFFFF0000;
-  GPIO_PORTA_AMSEL_R &= ~0xF0;
-}			
+		void KEYPAD_COLUMNS_INIT(){  	// PORT A (4 --> 7) ==> Keypad Columns
+  		SYSCTL_RCGCGPIO_R |= 0x01;
+  		while((SYSCTL_PRGPIO_R & 0x01) == 0);
+  		GPIO_PORTA_LOCK_R=0x4C4F434B;
+		GPIO_PORTA_CR_R |=0xF0;
+		GPIO_PORTA_DEN_R |=0xF0;
+  		GPIO_PORTA_PUR_R |= 0xF0;		// Pins(4 --> 7) Pull Up Resistors
+		GPIO_PORTA_AFSEL_R &= ~0xF0;
+		GPIO_PORTA_PCTL_R &= ~0xFFFF0000;
+  		GPIO_PORTA_AMSEL_R &= ~0xF0;
+		}			
 
-void BUZZER_INIT (){	// Buzzer ==> E3
-	SYSCTL_RCGCGPIO_R |= 0x10; 
-	while ((SYSCTL_PRGPIO_R & 0x10)==0); 
-	GPIO_PORTE_LOCK_R=0x4C4F434B;
-	GPIO_PORTE_CR_R |= 0x08; 
-	GPIO_PORTE_DEN_R |= 0x08;
-	GPIO_PORTE_AFSEL_R &= ~0x08; 
-	GPIO_PORTE_PCTL_R &= ~0x00F000; 
-	GPIO_PORTE_AMSEL_R &= ~0x08;
-	GPIO_PORTE_DIR_R |= 0x08; 		// Buzzer ==> Output 
-	GPIO_PORTE_DATA_R &= ~0x08; 	// Clear Buzzer {E3 = 0} (No Sound at the beginning)
-}
+		void BUZZER_INIT (){	// Buzzer ==> E3
+		SYSCTL_RCGCGPIO_R |= 0x10; 
+		while ((SYSCTL_PRGPIO_R & 0x10)==0); 
+		GPIO_PORTE_LOCK_R=0x4C4F434B;
+		GPIO_PORTE_CR_R |= 0x08; 
+		GPIO_PORTE_DEN_R |= 0x08;
+		GPIO_PORTE_AFSEL_R &= ~0x08; 
+		GPIO_PORTE_PCTL_R &= ~0x00F000; 
+		GPIO_PORTE_AMSEL_R &= ~0x08;
+		GPIO_PORTE_DIR_R |= 0x08; 		// Buzzer ==> Output 
+		GPIO_PORTE_DATA_R &= ~0x08; 	// Clear Buzzer {E3 = 0} (No Sound at the beginning)
+		}
 
-void B_Init()
+		///////////////////*LCD_Initlization*////////////////
+		void B_Init()
 		{
 		SYSCTL_RCGCGPIO_R |= 0x02;             //Port B Clock enable
 		while((SYSCTL_PRGPIO_R & 0x02)==0){};  //Delay
@@ -121,55 +122,57 @@ void B_Init()
 		 }
 
 		
-void LCD_enable(){
-GPIO_PORTB_DATA_R |=enable;
-systick_init(80000);
-GPIO_PORTB_DATA_R &= ~enable;
-systick_init(32000);
-}
-void LCD_write (unsigned char data, unsigned char control_write_select){
- data &= 0xF0; /*take upperpart of data*/
- control_write_select &= 0X0F;                         /*take lower part of control*/
- GPIO_PORTB_DATA_R = data|control_write_select;        /*send data to be written or command to be executed*/ 
- LCD_enable();   /* give enable and delay*/
- GPIO_PORTB_DATA_R = 0;  //clear port data        
-}
+		void LCD_enable(){
+		GPIO_PORTB_DATA_R |=enable;
+		systick_init(80000);
+		GPIO_PORTB_DATA_R &= ~enable;
+		systick_init(32000);
+		}
 
-void LCD_display(unsigned char data){
- LCD_write(data &0xF0,write_data);
- LCD_write(data <<4  ,write_data);
-}
+		void LCD_write (unsigned char data, unsigned char control_write_select){
+		data &= 0xF0; /*take upperpart of data*/
+ 		control_write_select &= 0X0F;                         /*take lower part of control*/
+ 		GPIO_PORTB_DATA_R = data|control_write_select;        /*send data to be written or command to be executed*/ 
+ 		LCD_enable();   /* give enable and delay*/
+ 		GPIO_PORTB_DATA_R = 0;  //clear port data        
+		}
 
-void LCD_command(unsigned char command){
- LCD_write(command &0xF0,write_command);
- LCD_write(command <<4  ,write_command);
-systick_init(32000);
-}
-void LCD_ascii(char *letter){
-int i;
-for (i=0; letter[i]!=0;i++){
-    LCD_display(letter[i]);
-    }
-}
+		void LCD_display(unsigned char data){
+ 		LCD_write(data &0xF0,write_data);
+ 		LCD_write(data <<4  ,write_data);
+		}
 
-void LCD_cursor(unsigned char row,unsigned char column){
-unsigned char position=0;
-if(row==1){
-position= FirstRow+column-1;
-}
-else if(row==2){
-position= SecondRow+column-1;
-}
-else position=FirstRow;
-LCD_command(position);
-}
-void LCD_init(){
-LCD_command(line);
-LCD_command(fourbit);
-LCD_command(moveCursorRight);
-LCD_command(clear_display);
-LCD_command(cursorBlink);
-}
+		void LCD_command(unsigned char command){
+ 		LCD_write(command &0xF0,write_command);
+ 		LCD_write(command <<4  ,write_command);
+		systick_init(32000);
+		}
+		void LCD_ascii(char *letter){
+		int i;
+		for (i=0; letter[i]!=0;i++){
+   		LCD_display(letter[i]);
+    	}
+		}
+
+		void LCD_cursor(unsigned char row,unsigned char column){
+		unsigned char position=0;
+		if(row==1){
+		position= FirstRow+column-1;
+		}
+		else if(row==2){
+		position= SecondRow+column-1;
+		}
+		else position=FirstRow;
+		LCD_command(position);
+		}
+
+		void LCD_init(){
+		LCD_command(line);
+		LCD_command(fourbit);
+		LCD_command(moveCursorRight);
+		LCD_command(clear_display);
+		LCD_command(cursorBlink);
+		}
 
 /* LCD_enable function gives enable a pulse that lasts for some time(enable acts like latches and read data while clock is high)
 LCD_write is a function that makes writing the ffunctions in four bits mode easier
@@ -177,6 +180,10 @@ LCD_display is a function that will display numbers or letters on screen
 LCD_ascii is the function that will read the letter
 LCD_cursor is a function that controls the cursor location on the 2x16 lcd screen
 LCD_command is a function that gives commands to lcd like on and off and open display and close display*/
+
+
+
+////////////////////////////////////////////////////////{Functions}////////////////////////////////////////////////////////////////////////
         void MAIN_INIT(){
 		SW3_INIT ();
 		SWICH_Init();
@@ -184,89 +191,83 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		BUZZER_INIT ();
 		KEYPAD_ROWS_INIT();
 		KEYPAD_COLUMNS_INIT();			
-				}
+		}
 
-				void PAUSE(){
-
+		void PAUSE(){
         //LCD =NVIC_ST_CURRENT_R 
         NVIC_ST_CTRL_R &= 0xFFFFFFFE;
-
         }
 
         void resume(){
-
         NVIC_ST_CTRL_R |=0X00000001;
         //LCD =NVIC_ST_CURRENT_R;
         }
 
         void clear (){
-				LCD_ascii("00:00");
+		LCD_ascii("00:00");
         NVIC_ST_CURRENT_R=0X000;
-
         }
     
     
-    int check_door (){
-    int SW3=(GPIO_PORTE_DATA_R &0x01);
+    	int check_door (){
+    	int SW3=(GPIO_PORTE_DATA_R &0x01);
+    	if (SW3==0x00)
+    	{
+    	return (int)(1);
+    	}
+    	else 
+    	{
+    	//print_str("Close the door plz ? \n");
+    	return (int)(0);
+    	}
+
+    	}
     
-    if (SW3==0x00)
-    {
-    return (int)(1);
-    }
-    else 
-    {
-    //print_str("Close the door plz ? \n");
-    return (int)(0);
-    }
-
-    }
-    
 
 
-    void NUM_SEC(unsigned long num)
-    {
-    int i;		
-    for ( i = 0; i < num; i++)
+    	void NUM_SEC(unsigned long num)
+    	{
+    	int i;		
+    	for ( i = 0; i < num; i++)
 		{
-			systick_init(0X00F42400); //ONE SEC
-            if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
-            {
-               void PAUSE();
-              systick_init(16000);
-               while (1)
-               {
-                if((GPIO_PORTF_DATA_R & 0x10)==0){ 
-                    clear(); 
-                    break; }
-                else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
-                    resume();
-                    break; }
-               }
-               }
-               //if (/*LCD "00:00"*/) break;
-            
-		}
-	
-		}
+		systick_init(0X00F42400); //ONE SEC
+        if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
+        {
+    	void PAUSE();
+        systick_init(16000);
+        	while (1)
+        	{
+        	if((GPIO_PORTF_DATA_R & 0x10)==0){ 
+        		clear(); 
+        		break; }
+        	else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
+        		resume();
+        		break; }
+				else systick_init(16000);
+        	}
+        }
+        //if (/*LCD "00:00"*/) break;
+        }
+        }
 
-	void NUM_MIN(unsigned long num )
+		void NUM_MIN(unsigned long num )
 		{
 		int i;
 		int j;
-			for ( j = 0; j < num; i++)
-			{
-			for ( i = 0; i < 60; i++)
-			{
-				NUM_SEC(1); //ONE SEC
+		for ( j = 0; j < num; i++)
+		{
+		for ( i = 0; i < 60; i++)
+		{
+		NUM_SEC(1); //ONE SEC
                 // if (/*LCD "00:00"*/) break;
-			}
+		}
             // if (/*LCD "00:00"*/) break;
-			}
+		}
 	
 		}
 
 		void LED_END(){
-			int i;
+		int i;
 		GPIO_PORTF_DATA_R &= ~0x0E;
         NUM_SEC(1);
 		for(i=0;i < 6;i++){
@@ -275,7 +276,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		}
 		}
 
-     void LED_BLINK(){
+     	void LED_BLINK(){
 		while(1){
 		GPIO_PORTF_DATA_R^= 0x0E;
 		NUM_SEC(1);
@@ -293,8 +294,8 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 			//clear lcd
 		i=//GIT_FROM_KYPAD)();
          //LCD"00:0I"
-         j=i*10;
-         i=//GIT_FROM_KYPAD)();
+        j=i*10;
+    	i=//GIT_FROM_KYPAD)();
          
         
         *total_min =(i + j) ;
@@ -303,8 +304,8 @@ LCD_command is a function that gives commands to lcd like on and off and open di
             LCD"0total_min:00"}
 			else LCD"total_min:00"*/
             
-            break;
-            }
+        break;
+    	}
         //else printf"PLZ ENTER BELOW 30 MIN"
         }
 
@@ -313,8 +314,8 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         
          i=//GIT_FROM_KYPAD();
         //LCD"total-min:0I"
-         j=i*10 ;
-         i=0;//GIT_FROM_KYPAD();
+        j=i*10 ;
+        i=0;//GIT_FROM_KYPAD();
          
         *total_sec =(i + j) ;
             
@@ -343,14 +344,14 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 
         int  MIN_CHICKEN (int kilos)
         {
-            int CHICKEN_TIME ;
+    	int CHICKEN_TIME ;
       while(1){
-		  kilos=0;//  FROM KEYBAD INPUT;
+		kilos=0;//  FROM KEYBAD INPUT;
         if ((kilos<=9) &(kilos>0)){
 			//lcd out 
 		NUM_SEC(2);
 		//lcd clear
-            CHICKEN_TIME=12*kilos;
+        CHICKEN_TIME=12*kilos;
         return (int) (CHICKEN_TIME) ;
         }
         else
@@ -405,7 +406,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 
 		void Buzz (){
 			Buzzer_ON();
-			NUM_SEC(2);
+			NUM_SEC(1);
 			Buzzer_OFF();
 		}
 
@@ -416,9 +417,9 @@ void Timer(int time_min,int time_sec){
 	// time_min ==> Number of Minutes to Start count from it 
 	// time_sec ==> Number of Seconds to Start count from it 
 	
-	    for(min=time_min;min>=0;min--)
+	for(min=time_min;min>=0;min--)
     {
-        if(min > 9)
+    if(min > 9)
             for(sec=time_sec;sec>=0;sec--)
             {
                 if(sec > 9)
@@ -429,7 +430,7 @@ void Timer(int time_min,int time_sec){
 					//LCD_ascii(fstr);													
 					NUM_SEC(1);
             }
-        else if(min <= 9)
+    else if(min <= 9)
             for(sec=time_sec;sec>=0;sec--)
             {
                 if(sec > 9){
