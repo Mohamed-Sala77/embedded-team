@@ -225,7 +225,7 @@ LCD_command is a function that gives commands to lcd like on and off and open di
     
 
 
-    	void NUM_SEC(unsigned long num)
+    	int NUM_SEC(unsigned long num)
     	{
     	int i;		
     	for ( i = 0; i < num; i++)
@@ -234,16 +234,16 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         if (((GPIO_PORTE_DATA_R & 0x01)==0) | ((GPIO_PORTF_DATA_R & 0x10)==0))
         {
     	void PAUSE();
-        systick_init(16000);
+        systick_init(1600000);
         	while (1)
         	{
         	if((GPIO_PORTF_DATA_R & 0x10)==0){ 
         		clear(); 
-        		break; }
+        		return(0); }
         	else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
         		resume();
         		break; }
-				else systick_init(16000);
+				else systick_init(0X00F42400);
         	}
         }
         //if (/*LCD "00:00"*/) break;
@@ -415,7 +415,7 @@ void Buzzer_OFF(){
 
 		
 void Timer(int time_min,int time_sec){
-	int min,sec;
+	int min,sec,check;
 	char fstr[10]={0};
 	// time_min ==> Number of Minutes to Start count from it 
 	// time_sec ==> Number of Seconds to Start count from it 
@@ -431,7 +431,12 @@ void Timer(int time_min,int time_sec){
                 else if(sec <= 9)
                     sprintf(fstr,"%i%c0%i",min,':',sec);
 					//LCD_ascii(fstr);													
-					NUM_SEC(1);
+					check=NUM_SEC(1);
+					 if(check==0)
+					{
+						sec=0;
+						min=0:
+					}
             }
     else if(min <= 9)
             for(sec=time_sec;sec>=0;sec--)
@@ -443,7 +448,12 @@ void Timer(int time_min,int time_sec){
                 else if(sec <= 9){
                     sprintf(fstr,"0%i%c0%i",min,':',sec);				
 										LCD_ascii(fstr);}													
-                   NUM_SEC(1);
+                   check=NUM_SEC(1);
+				    if(check==0)
+					{
+						sec=0;
+						min=0:
+					}
                 //if(min == 0 & sec == 0)
                     // Timer is Finished
 					
