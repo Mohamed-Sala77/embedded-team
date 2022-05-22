@@ -11,9 +11,11 @@ int main(){
 		int chicken_SEC,chicken_MIN;
 		int Timer_min=0,Timer_sec=0;
 		int door ;
-		char order =Keypad_Out();
+		char order ;
 		MAIN_INIT();
+
 	//ON LCD () "PLZ ENTER SYMPOL"
+	order =Read_Keypad();
 		
     
 	switch (order)
@@ -23,7 +25,7 @@ int main(){
 	case 'a':
 		//CLEAR LCD
 		//PRINT "POPCORN"
-		NUM_SEC (2);
+		NUM_SEC (1);
 		while (1)
 		{
 			door=check_door ();
@@ -34,7 +36,7 @@ int main(){
 			{
 					//CLEAR LCD
 					//PRINT 1 MIN
-					NUM_SEC (2);
+					NUM_SEC (1);
                 LCD_ascii("01:00");//nem_sec decrease
 				Timer(1,0);
 				LED_END();
@@ -105,7 +107,7 @@ int main(){
 		case 'd':
 		//CLEAR LCD
 		//PRINT "ENTERE TIME"
-		NUM_SEC (2);
+		NUM_SEC (1);
 		TIMER_D(&Timer_min,&Timer_sec );
 		while (1)
 		{
@@ -115,9 +117,6 @@ int main(){
 			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
 			{
-				
-				NUM_MIN(Timer_min);
-				NUM_SEC(Timer_sec);
 				Timer(Timer_min,Timer_sec);
 				LED_END();
 				// END "bUZZ" 

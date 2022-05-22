@@ -193,16 +193,6 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		KEYPAD_COLUMNS_INIT();			
 		}
 
-		void PAUSE(){
-        //LCD =NVIC_ST_CURRENT_R 
-        NVIC_ST_CTRL_R &= 0xFFFFFFFE;
-        }
-
-        void resume(){
-        NVIC_ST_CTRL_R |=0X00000001;
-        //LCD =NVIC_ST_CURRENT_R;
-        }
-
         void clear (){
 		LCD_ascii("00:00");
         NVIC_ST_CURRENT_R=0X000;
@@ -250,22 +240,6 @@ LCD_command is a function that gives commands to lcd like on and off and open di
         }
         }
 
-		void NUM_MIN(unsigned long num )
-		{
-		int i;
-		int j;
-		for ( j = 0; j < num; i++)
-		{
-		for ( i = 0; i < 60; i++)
-		{
-		NUM_SEC(1); //ONE SEC
-                // if (/*LCD "00:00"*/) break;
-		}
-            // if (/*LCD "00:00"*/) break;
-		}
-	
-		}
-
 		void LED_END(){
 		int i;
 		GPIO_PORTF_DATA_R &= ~0x0E;
@@ -276,14 +250,6 @@ LCD_command is a function that gives commands to lcd like on and off and open di
 		}
 		}
 
-     	void LED_BLINK(){
-		while(1){
-		GPIO_PORTF_DATA_R^= 0x0E;
-		NUM_SEC(1);
-			//if (/*00:00*/)break;
-			
-		}
-		}
 
         void TIMER_D(int*total_min,int*total_sec){
         uint32_t i;
@@ -435,7 +401,7 @@ void Timer(int time_min,int time_sec){
 					 if(check==0)
 					{
 						sec=0;
-						min=0:
+						min=0;
 					}
             }
     else if(min <= 9)
@@ -452,7 +418,7 @@ void Timer(int time_min,int time_sec){
 				    if(check==0)
 					{
 						sec=0;
-						min=0:
+						min=0;
 					}
                 //if(min == 0 & sec == 0)
                     // Timer is Finished
