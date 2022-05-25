@@ -358,68 +358,7 @@ return(out);
         }
     
     
-    	int check_door (){
-    	int SW3=(GPIO_PORTE_DATA_R &0x20);
-    	if (SW3==0x00)
-    	{
-			LCD_Write_Data("Close the door ",15);
-		systick_init(160000);
-    	return (int)(0);
-    	
-    	}
-    	else 
-    	{
-    	return (int)(1);
-    	}
-
-    	}
-			
     
-
-
-    	int NUM_SEC(unsigned long num)
-    	{
-    	int i;		
-    	for ( i = 0; i < 10*num; i++)
-		{
-		systick_init(1605000); //1/10 SEC
-		
-        if (((GPIO_PORTE_DATA_R &0x20)==0x00)| ((GPIO_PORTF_DATA_R & 0x10)==0) )
-        {
-    	
-        systick_init(1605000); //PAUSE
-        	while (1)
-        	{
-				GPIO_PORTF_DATA_R^= 0x0E;  // blink
-        	if((GPIO_PORTF_DATA_R & 0x10)==0){ 
-        		clear(); 
-        		return(0); }
-        	else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
-        		break; } //resume
-				else systick_init(6400000);
-        	}
-        }
-        GPIO_PORTF_DATA_R|= 0x0E;
-        }
-        }
-
-		void LED_END(){
-		int i;
-		char fstr[10]={0};
-		sprintf(fstr,"00%c00",':');				
-		LCD_Write_Data(fstr,5);
-		GPIO_PORTF_DATA_R &= ~0x0E;
-        Systick_Wait_1s(1);
-		for(i=0;i < 6;i++){
-			GPIO_PORTE_DATA_R ^= 0x01;
-		GPIO_PORTF_DATA_R ^= 0x0E;
-		Systick_Wait_1s(1);
-		
-		}
-		Buzzer_OFF();
-		LCD_Write_Data("Done",4);
-			systick_init(160000000);
-		}
 
         void TIMER_D(int*total_min,int*total_sec){
 		int t;	
