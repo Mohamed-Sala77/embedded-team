@@ -133,8 +133,19 @@ void LED_Init()
 		GPIO_PORTE_DATA_R |= 0x20; // Initialize PIN E0 TO BE OFF
 
 		}
-		////////////////////////////////////////////*Keypad_Initlization*///////////////////////////////////////////////
-				////////////////////////////////////////////*Keypad_Initlization*///////////////////////////////////////////////
+			void BUZZER_INIT (){	// Buzzer ==> E3
+		SYSCTL_RCGCGPIO_R |= 0x10; 
+		while ((SYSCTL_PRGPIO_R & 0x10)==0); 
+		GPIO_PORTE_LOCK_R=0x4C4F434B;
+		GPIO_PORTE_CR_R |= 0x01; 
+		GPIO_PORTE_DEN_R |= 0x01;
+		GPIO_PORTE_AFSEL_R &= ~0x01; 
+		GPIO_PORTE_PCTL_R &= ~0x00000F; 
+		GPIO_PORTE_AMSEL_R &= ~0x01;
+		GPIO_PORTE_DIR_R |= 0x01; 		// Buzzer ==> Output 
+		GPIO_PORTE_DATA_R &= ~0x01; 	// Clear Buzzer {E3 = 0} (No Sound at the beginning)
+		}
+			////////////////////////////////////////////*Keypad_Initlization*///////////////////////////////////////////////
 
 		
 void KEYPAD_ROWS_INIT(){  	// PORT A (2 --> 4 & 7) ==> Keypad Rows
@@ -252,18 +263,7 @@ return(out);
 }
 
 
-		void BUZZER_INIT (){	// Buzzer ==> E3
-		SYSCTL_RCGCGPIO_R |= 0x10; 
-		while ((SYSCTL_PRGPIO_R & 0x10)==0); 
-		GPIO_PORTE_LOCK_R=0x4C4F434B;
-		GPIO_PORTE_CR_R |= 0x01; 
-		GPIO_PORTE_DEN_R |= 0x01;
-		GPIO_PORTE_AFSEL_R &= ~0x01; 
-		GPIO_PORTE_PCTL_R &= ~0x00000F; 
-		GPIO_PORTE_AMSEL_R &= ~0x01;
-		GPIO_PORTE_DIR_R |= 0x01; 		// Buzzer ==> Output 
-		GPIO_PORTE_DATA_R &= ~0x01; 	// Clear Buzzer {E3 = 0} (No Sound at the beginning)
-		}
+	
 
 		///////////////////*LCD_Initlization*////////////////
 		void	Systick_Wait_1s(unsigned long num)
@@ -331,9 +331,26 @@ return(out);
 		LCD_Command(Clear_Display);
 		LCD_Command(Return_Home);
 		SW3_INIT ();
+			KEYPAD_ROWS_INIT();
+	KEYPAD_COLUMNS_INIT();
 		SWICH_Init();
 		LED_Init ();
 		BUZZER_INIT ();			
+		}
+
+		
+		void Buzzer_ON(){
+		GPIO_PORTE_DATA_R |= 0x01;
+		}
+
+		void Buzzer_OFF(){
+		GPIO_PORTE_DATA_R &= ~0x01;
+		}	
+
+		void Buzz (){
+			Buzzer_ON();
+			Systick_Wait_1s(3);
+			Buzzer_OFF();
 		}
 
         void clear (){
@@ -369,16 +386,17 @@ return(out);
 		
         if (((GPIO_PORTE_DATA_R &0x20)==0x00)| ((GPIO_PORTF_DATA_R & 0x10)==0) )
         {
-    	GPIO_PORTF_DATA_R^= 0x0E;  // blink
+    	
         systick_init(1605000); //PAUSE
         	while (1)
         	{
+				GPIO_PORTF_DATA_R^= 0x0E;  // blink
         	if((GPIO_PORTF_DATA_R & 0x10)==0){ 
         		clear(); 
         		return(0); }
         	else if ((GPIO_PORTF_DATA_R & 0x01)==0) {
         		break; } //resume
-				else systick_init(1600000);
+				else systick_init(6400000);
         	}
         }
         GPIO_PORTF_DATA_R|= 0x0E;
@@ -387,21 +405,24 @@ return(out);
 
 		void LED_END(){
 		int i;
+		char fstr[10]={0};
+		sprintf(fstr,"00%c00",':');				
+		LCD_Write_Data(fstr,5);
 		GPIO_PORTF_DATA_R &= ~0x0E;
         Systick_Wait_1s(1);
 		for(i=0;i < 6;i++){
-			Buzzer_ON();
+			GPIO_PORTE_DATA_R ^= 0x01;
 		GPIO_PORTF_DATA_R ^= 0x0E;
 		Systick_Wait_1s(1);
-		Buzzer_OFF();
 		
 		}
-		
+		Buzzer_OFF();
 		LCD_Write_Data("Done",4);
-			systick_init(160000);
+			systick_init(160000000);
 		}
 
         void TIMER_D(int*total_min,int*total_sec){
+		int t;	
         uint32_t i1,i2;
 		uint32_t s1,s2;
         uint32_t j ;
@@ -409,17 +430,28 @@ return(out);
          
         while(1){
 			char fstr[10]={0};
+			sprintf(fstr,"00%c00",':');
+         LCD_Write_Data(fstr,5);
+			systick_init(16000000);
 			//clear lcd
-		i1=0;
-			
+		i1=Keypad_read();
+		for(t=0;t<10;t++){
+		if(i1==11)	{
+			goto zeros;
+		}
 		sprintf(fstr,"00%c0%i",':',i1);
          LCD_Write_Data(fstr,5);
-			systick_init(16000000);
+			systick_init(1600000);}
         j=i1*10;
-    	i2=9;//Read_Keypad();
+    	i2=Keypad_read();//Read_Keypad();
+		for(t=0;t<10;t++)	{
+		if(i2==11)	{
+			goto zeros;
+		}
 		sprintf(fstr,"00%c%i%i",':',i1,i2);
          LCD_Write_Data(fstr,5);
-			systick_init(16000000);
+			systick_init(1600000);}
+		
          
         
         *total_min =(i2 + j) ;
@@ -436,27 +468,47 @@ return(out);
         //------------------------------------
 
         
-         s1=1;//Read_Keypad();
-        sprintf(fstr,"0%i%c%i%i",i1,':',i2,s1);
+         s1=Keypad_read();
+		 for(t=0;t<10;t++)	{
+		if(s1==11)	{
+			goto zeros;
+		}
+		sprintf(fstr,"0%i%c%i%i",i1,':',i2,s1);
          LCD_Write_Data(fstr,5);
-			systick_init(16000000);
+			systick_init(1600000);}
         j=s1*10 ;
-        s2=2;//Read_Keypad();
+        s2=Keypad_read();
+		 for(t=0;t<10;t++)	{
+		if(s2==11)	{
+			goto zeros;
+		}
 		sprintf(fstr,"%i%i%c%i%i",i1,i2,':',s1,s2);
          LCD_Write_Data(fstr,5);
-			systick_init(16000000);
+			systick_init(1600000);}
          
         *total_sec =(s2 + j) ;
+		
+
+			if((*total_min==0) && (*total_sec==0)){
+				zeros:
+		*total_sec=0;
+		*total_min=0;
+		sprintf(fstr,"00%c00",':');
+         LCD_Write_Data(fstr,5);
+			systick_init(16000000);
+			}
             
         }
+		
         
-        int MIN_BEEF (char kilos)
+        int MIN_BEEF ()
         {
+		char kilos;
         int BEEF_TIME;
 		char fstr[10]={0};
 		
         while(1){
-		kilos=1;//Read_Keypad();
+		kilos=Keypad_read();
         if ((kilos<=9) & (kilos>0)){
 		sprintf(fstr,"%i",kilos);
          LCD_Write_Data(fstr,1);
@@ -480,12 +532,13 @@ return(out);
         }
 
 
-        int  MIN_CHICKEN (int kilos)
+        int  MIN_CHICKEN ()
         {
+		char kilos;
     	int CHICKEN_TIME ;
 		char fstr[10]={0};
       while(1){
-		kilos=1;//Read_Keypad();
+		kilos= Keypad_read();//Read_Keypad();
         if ((kilos<=9) &(kilos>0)){
 			sprintf(fstr,"%i",kilos);
          LCD_Write_Data(fstr,1);
@@ -542,19 +595,6 @@ return(out);
 		return(Keypad_Out);
 		}*/
 
-		void Buzzer_ON(){
-		GPIO_PORTE_DATA_R |= 0x01;
-		}
-
-		void Buzzer_OFF(){
-		GPIO_PORTE_DATA_R &= ~0x01;
-		}	
-
-		void Buzz (){
-			Buzzer_ON();
-			Systick_Wait_1s(3);
-			Buzzer_OFF();
-		}
 
 		
 	void Timer(int time_min,int time_sec){
@@ -598,13 +638,10 @@ return(out);
 					{
 						sec=0;
 						min=0;
+						sprintf(fstr,"00%c00",':');				
+						LCD_Write_Data(fstr,5);	}
 					}
-                if(min == 0 & sec == 0)
-                    {
-                    sprintf(fstr,"00%c00",':');				
-										LCD_Write_Data(fstr,5);	}
-					
-            }
+             
 						
         time_sec = 59;  // To start 2nd iteration in Minutes loop with 59 seconds
     }
