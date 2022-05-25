@@ -1,3 +1,5 @@
+#include "tm4c123gh6pm.h"
+
 #include "Io.h" 
 #include "tm4c123gh6pm.h" 
 #include "stdint.h"
@@ -6,27 +8,26 @@
 ///////////////////////////////////////////////
 
 int main(){
-		int weight=0 ;
 		int BEEF_SEC=0,BEEF_MIN=0;
 		int chicken_SEC,chicken_MIN;
 		int Timer_min=0,Timer_sec=0;
 		int door ;
-		char order;	
+		unsigned char order;	
 		MAIN_INIT();
 	 
 		LCD_Write_Data("Welcome",7);
 		Systick_Wait_1s(1); // 1 sec
 	while(1){
+		
 	LCD_Write_Data("Enter sympol",12);
 		Systick_Wait_1s(1); // 1 sec
-		order = Keypad_Out();
+		order =Keypad_read();
 	
     
 	switch (order)
 	{
 		
 	case 'A':
-	case 'a':
 		LCD_Write_Data("POPCORN",7);
 		Systick_Wait_1s(1); // 1 sec
 		while (1)
@@ -55,12 +56,11 @@ int main(){
 		break;
 
 		case 'B':
-		case 'b':
 		LCD_Write_Data("BEEF",4);
 		Systick_Wait_1s(1); // 1 sec
 		LCD_Write_Data("Enter weight?",13);
 		Systick_Wait_1s(1); // 1 sec
-		BEEF_SEC=MIN_BEEF(weight);			
+		BEEF_SEC=MIN_BEEF();			
 		while(1){
 			door=check_door ();
 			if (door==1)
@@ -86,13 +86,13 @@ int main(){
 		}
 		break;
 
-		case 'c':
+		
 		case 'C':
 		LCD_Write_Data("Chicken",7);
 		Systick_Wait_1s(1); // 1 sec
 		LCD_Write_Data("Enter weight?",13);
 		Systick_Wait_1s(1); // 1 sec
-		chicken_SEC=MIN_CHICKEN(weight);
+		chicken_SEC=MIN_CHICKEN();
 					
 		while(1){
 			door=check_door ();
@@ -121,10 +121,14 @@ int main(){
 		break;
 
 		case 'D':
-		case 'd':
+
 		LCD_Write_Data("ENTER TIME",10);
 		Systick_Wait_1s(1); // 1 sec
+		while(1){
 		TIMER_D(&Timer_min,&Timer_sec );
+			if((Timer_min!=0) && (Timer_sec!=0))break;
+		}
+		
 		while (1)
 		{
 			door=check_door ();
