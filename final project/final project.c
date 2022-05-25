@@ -19,7 +19,7 @@ int main(){
 	while(1){
 	LCD_Write_Data("Enter sympol",12);
 		Systick_Wait_1s(1); // 1 sec
-		order ='A';
+		order = Keypad_Out();
 	
     
 	switch (order)
@@ -42,7 +42,7 @@ int main(){
 					Systick_Wait_1s(1); // 1 sec
 				Timer(0,12);
 				LED_END();
-				Buzz();
+				
 				break;
 			}
 			LCD_Write_Data("Push Start",10);
@@ -73,7 +73,7 @@ int main(){
 				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(BEEF_MIN,BEEF_SEC);
 				LED_END();
-				Buzz(); 
+				
 				break;
 			}
 			LCD_Write_Data("Push Start",10);
@@ -105,7 +105,7 @@ int main(){
 				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(chicken_MIN,chicken_SEC);
 				LED_END();
-				Buzz();
+				
 				break;
 				
 			}
@@ -136,7 +136,7 @@ int main(){
 				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(Timer_min,Timer_sec);
 				LED_END();
-				Buzz();
+				
 				break;
 			}
 			LCD_Write_Data("Push Start",10);
@@ -146,6 +146,12 @@ int main(){
 		if(door==1) break;
 			
 		}
+		break;
+		default:
+			LCD_Write_Data("Err.",4);
+			Systick_Wait_1s(1); // 1 sec
+			LCD_Write_Data("Enter A,B,C or D",16);
+			Systick_Wait_1s(1); // 1 sec
 		break;
 	}
 }

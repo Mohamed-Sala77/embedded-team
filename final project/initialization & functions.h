@@ -133,29 +133,124 @@ void LED_Init()
 		GPIO_PORTE_DATA_R |= 0x20; // Initialize PIN E0 TO BE OFF
 
 		}
-		///////////////////*Keypad_Initlization*////////////////
-		/*void KEYPAD_ROWS_INIT(){  	// PORT D (0 --> 3) ==> Keypad Rows
- 		SYSCTL_RCGCGPIO_R |= 0x08;
-  		while((SYSCTL_PRGPIO_R & 0x08) == 0);
-  		GPIO_PORTD_LOCK_R=0x4C4F434B;
-		GPIO_PORTD_CR_R |=0x0F;
-		GPIO_PORTD_DEN_R |=0x0F;
-		GPIO_PORTD_AFSEL_R &= ~0x0F;
-		GPIO_PORTD_PCTL_R &= ~0x0000FFFF;
- 		GPIO_PORTD_AMSEL_R &= ~0x0F;
-		}			
+		////////////////////////////////////////////*Keypad_Initlization*///////////////////////////////////////////////
+				////////////////////////////////////////////*Keypad_Initlization*///////////////////////////////////////////////
 
-		void KEYPAD_COLUMNS_INIT(){  	// PORT A (4 --> 7) ==> Keypad Columns
-  		SYSCTL_RCGCGPIO_R |= 0x01;
-  		while((SYSCTL_PRGPIO_R & 0x01) == 0);
-  		GPIO_PORTA_LOCK_R=0x4C4F434B;
-		GPIO_PORTA_CR_R |=0xF0;
-		GPIO_PORTA_DEN_R |=0xF0;
-  		GPIO_PORTA_PUR_R |= 0xF0;		// Pins(4 --> 7) Pull Up Resistors
-		GPIO_PORTA_AFSEL_R &= ~0xF0;
-		GPIO_PORTA_PCTL_R &= ~0xFFFF0000;
-  		GPIO_PORTA_AMSEL_R &= ~0xF0;
-		}		*/	
+		
+void KEYPAD_ROWS_INIT(){  	// PORT A (2 --> 4 & 7) ==> Keypad Rows
+  SYSCTL_RCGCGPIO_R |= 0x01;
+  while((SYSCTL_PRGPIO_R & 0x01) == 0);
+  GPIO_PORTA_LOCK_R=0x4C4F434B;
+	GPIO_PORTA_CR_R |=0x9C;
+	GPIO_PORTA_DEN_R |=0x9C;
+	GPIO_PORTA_AFSEL_R &= ~0x9C;
+	GPIO_PORTA_PCTL_R &= ~0xF00FFF00;
+  GPIO_PORTA_AMSEL_R &= ~0x9C;
+}			
+
+void KEYPAD_COLUMNS_INIT(){  	// PORT E (1 --> 4) ==> Keypad Columns
+  SYSCTL_RCGCGPIO_R |= 0x10;
+  while((SYSCTL_PRGPIO_R & 0x10) == 0);
+  GPIO_PORTE_LOCK_R=0x4C4F434B;
+	GPIO_PORTE_CR_R |=0x1E;
+	GPIO_PORTE_DEN_R |=0x1E;
+  GPIO_PORTE_PUR_R |= 0x1E;		// Pins(1 --> 4) Pull Up Resistors
+	GPIO_PORTE_AFSEL_R &= ~0x1E;
+	GPIO_PORTE_PCTL_R &= ~0x0FFFF0;
+  GPIO_PORTE_AMSEL_R &= ~0x1E;
+}			
+	
+
+unsigned char Keypad_Out(){
+	unsigned char Keypad_Keys [4][4] = {{1, 2, 3, 'A'}, {4, 5, 6, 'B'}, {7, 8, 9, 'C'}, {'*', 0, '#', 'D'}}; // Keys Init.
+	unsigned char Keypad_Out = 0xFF; // Keypad Output = 0xFF if no Key is pressed
+	int c;
+	char Key_Col;		
+	GPIO_PORTA_DIR_R  |= 0x9C; // pins (2-->4 & 7) outputs for Rows
+	GPIO_PORTA_DATA_R |= 0x9C; // Set all Rows pins(2-->4 &7)
+	
+	GPIO_PORTE_DIR_R  |= 0x1E;
+	GPIO_PORTE_DATA_R  |= 0x0E;		
+	GPIO_PORTE_DIR_R  &= ~0x1E; // 	pins (1-->4) inputs for Columns
+
+		// First Row 	
+		GPIO_PORTA_DATA_R |= 0x9C;
+	GPIO_PORTA_DATA_R &= ~0x04; 
+	for(c=1;c<5;c++)
+		{
+			Key_Col = GPIO_PORTE_DATA_R & (1<<c); // Key_Col = Column in which a Key is pressed
+			if(Key_Col == 0x00)
+				{
+					Keypad_Out = Keypad_Keys [0][c-1]; // Keypad_Out = Key which is pressed after knowing its Row & Column {(c-1) bec. Col are connected from pin 1}
+					break; // to exit Column Loop is Key is Pressed
+				}		
+		}
+		if(Keypad_Out == '1' || Keypad_Out == '2' || Keypad_Out == '3' || Keypad_Out == 'A')
+			goto end;
+		
+		// Second Row
+		GPIO_PORTA_DATA_R |= 0x9C;
+		
+	GPIO_PORTA_DATA_R &= ~0x08;  
+	for(c=1;c<5;c++)
+		{
+			Key_Col = GPIO_PORTE_DATA_R & (1<<c); // Key_Col = Column in which a Key is pressed
+			if(Key_Col == 0x00)
+				{
+					Keypad_Out = Keypad_Keys [1][c-1]; // Keypad_Out = Key which is pressed after knowing its Row & Column {(c-1) bec. Col are connected from pin 1}
+					break; // to exit Column Loop is Key is Pressed
+				}		
+		}
+		if(Keypad_Out == '4' || Keypad_Out == '5' || Keypad_Out == '6' || Keypad_Out == 'B')
+			goto end;
+
+		// Third Row
+		GPIO_PORTA_DATA_R |= 0x9C;
+	GPIO_PORTA_DATA_R &= ~0x10;  
+	for(c=1;c<5;c++)
+		{
+			Key_Col = GPIO_PORTE_DATA_R & (1<<c); // Key_Col = Column in which a Key is pressed
+			if(Key_Col == 0x00)
+				{
+					Keypad_Out = Keypad_Keys [2][c-1]; // Keypad_Out = Key which is pressed after knowing its Row & Column {(c-1) bec. Col are connected from pin 1}
+					break; // to exit Column Loop is Key is Pressed
+				}		
+		}
+		if(Keypad_Out == '7' || Keypad_Out == '8' || Keypad_Out == '9' || Keypad_Out == 'C')
+			goto end;		
+		
+		// Fourth Row
+		GPIO_PORTA_DATA_R |= 0x9C;
+	GPIO_PORTA_DATA_R &= ~0x80;  
+	for(c=1;c<5;c++)
+		{
+			Key_Col = GPIO_PORTE_DATA_R & (1<<c); // Key_Col = Column in which a Key is pressed
+			if(Key_Col == 0x00)
+				{
+					Keypad_Out = Keypad_Keys [3][c-1]; // Keypad_Out = Key which is pressed after knowing its Row & Column {(c-1) bec. Col are connected from pin 1}
+					break; // to exit Column Loop is Key is Pressed
+				}		
+		}
+		if(Keypad_Out == '*' || Keypad_Out == '0' || Keypad_Out == '#' || Keypad_Out == 'D')
+			goto end;		
+		
+		end:
+		return(Keypad_Out);
+}
+
+unsigned char Keypad_read(){
+while(1){
+unsigned char out;
+out=Keypad_Out();
+if((GPIO_PORTF_DATA_R & 0x10)==0)	{
+			return(11);
+		}
+if (out!=0xFF)
+return(out);
+
+}
+}
+
 
 		void BUZZER_INIT (){	// Buzzer ==> E3
 		SYSCTL_RCGCGPIO_R |= 0x10; 
@@ -295,10 +390,13 @@ void LED_Init()
 		GPIO_PORTF_DATA_R &= ~0x0E;
         Systick_Wait_1s(1);
 		for(i=0;i < 6;i++){
+			Buzzer_ON();
 		GPIO_PORTF_DATA_R ^= 0x0E;
 		Systick_Wait_1s(1);
+		Buzzer_OFF();
 		
 		}
+		
 		LCD_Write_Data("Done",4);
 			systick_init(160000);
 		}
