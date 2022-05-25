@@ -266,7 +266,59 @@ return(out);
 		}
 
 		///////////////////*LCD_Initlization*////////////////
-		
+		void	Systick_Wait_1s(unsigned long num)
+		{
+			int i;
+			for ( i = 0; i < num; i++){
+				systick_init(0X00F42400); //ONE SEC
+			}
+		}
+
+
+
+
+		void LCD_Command(char command)
+		{
+		GPIO_PORTA_DATA_R &= ~0x60; //RS =0, E=0
+		GPIO_PORTB_DATA_R = command;
+		GPIO_PORTA_DATA_R |= 0x40; //E=1 to secure command
+		if (command < 4) // they take longer
+        systick_init(160000);
+  		else
+        systick_init(32000);
+		GPIO_PORTA_DATA_R &= ~0x60;
+		}
+
+		void LCD_Init(void)
+		{		
+		 LCD_Command(SetTo8Bits);				// using 8-bits configuration
+		 LCD_Command(EntryMode);				
+		 LCD_Command(Cursor_Off);				// turning off cursor blinking
+		systick_init(32000);
+		}
+
+		void LCD_Display(char data) 											//for writing characters
+		{ 
+		GPIO_PORTA_DATA_R &= ~0x60;			//RS=0 , E=0
+		GPIO_PORTA_DATA_R |= 0x20;		 	//RS=1 , E=0
+		GPIO_PORTB_DATA_R = data;				// read data
+		GPIO_PORTA_DATA_R |= 0x40;		 	//E=1
+		systick_init(16000);						//delay for 10 micro seconds
+		GPIO_PORTA_DATA_R &= ~0x60;			
+		GPIO_PORTB_DATA_R = 0;					
+		}
+
+		void LCD_Write_Data(char* data, unsigned short size) 				//for writing strings on LCD
+		{
+		unsigned long i = 0;
+		LCD_Command(Clear_Display);
+		LCD_Command(Return_Home);
+		for (i = 0; i < size; i++){					//for loop for displaying charecters one after the other
+		LCD_Display(*(data+i));
+		systick_init(16000);
+		}
+		}
+
 
 
 ////////////////////////////////////////////////////////{Functions}////////////////////////////////////////////////////////////////////////
