@@ -41,7 +41,7 @@ int main(){
 					GPIO_PORTF_DATA_R|= 0x0E;
 					LCD_Write_Data("1 Min",5);
 					Systick_Wait_1s(1); // 1 sec
-				Timer(0,12);
+				Timer(1,0);
 				LED_END();
 				
 				break;
