@@ -1,5 +1,5 @@
 #include "Io.h" 
-#include "tm4c123gh6pm2.h" 
+#include "tm4c123gh6pm.h" 
 #include "stdint.h"
 #include "string.h"
 #include "initialization & functions.h"
@@ -11,21 +11,24 @@ int main(){
 		int chicken_SEC,chicken_MIN;
 		int Timer_min=0,Timer_sec=0;
 		int door ;
-		char order ;
+		char order;	
 		MAIN_INIT();
-
-	//ON LCD () "PLZ ENTER SYMPOL"
-	order =Read_Keypad();
-		
+	 
+		LCD_Write_Data("Welcome",7);
+		Systick_Wait_1s(1); // 1 sec
+	while(1){
+	LCD_Write_Data("Enter sympol",12);
+		Systick_Wait_1s(1); // 1 sec
+		order ='A';
+	
     
 	switch (order)
 	{
 		
 	case 'A':
 	case 'a':
-		//CLEAR LCD
-		//PRINT "POPCORN"
-		NUM_SEC (1);
+		LCD_Write_Data("POPCORN",7);
+		Systick_Wait_1s(1); // 1 sec
 		while (1)
 		{
 			door=check_door ();
@@ -34,26 +37,29 @@ int main(){
 			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01 )==0)
 			{
-					//CLEAR LCD
-					//PRINT 1 MIN
-					NUM_SEC (1);
-                LCD_ascii("01:00");//nem_sec decrease
-				Timer(1,0);
+					GPIO_PORTF_DATA_R|= 0x0E;
+					LCD_Write_Data("1 Min",5);
+					Systick_Wait_1s(1); // 1 sec
+				Timer(0,12);
 				LED_END();
-				// END "bUZZ" 
+				Buzz();
 				break;
 			}
-			LCD_ascii("PLZ PUSH START" );
+			LCD_Write_Data("Push Start",10);
+			systick_init(1600000); // 1 sec
 			}
 			 
 		}
-		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
+		if(door==1) break;
 		}
 		break;
 
 		case 'B':
 		case 'b':
-		LCD_ascii("Beef weight?");
+		LCD_Write_Data("BEEF",4);
+		Systick_Wait_1s(1); // 1 sec
+		LCD_Write_Data("Enter weight?",13);
+		Systick_Wait_1s(1); // 1 sec
 		BEEF_SEC=MIN_BEEF(weight);			
 		while(1){
 			door=check_door ();
@@ -62,16 +68,19 @@ int main(){
 			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{ 
+		
 				calc_min(&BEEF_SEC ,&BEEF_MIN);
+				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(BEEF_MIN,BEEF_SEC);
 				LED_END();
-				// END "bUZZ" 
+				Buzz(); 
 				break;
 			}
-			//else  ON LCD "PLZ PUSH START"
+			LCD_Write_Data("Push Start",10);
+			systick_init(1600000); // 1 sec
 			}
 		}
-		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
+		 if(door==1) break;
 		
 						 
 		}
@@ -79,7 +88,10 @@ int main(){
 
 		case 'c':
 		case 'C':
-		// ON LCD "chicken weight?
+		LCD_Write_Data("Chicken",7);
+		Systick_Wait_1s(1); // 1 sec
+		LCD_Write_Data("Enter weight?",13);
+		Systick_Wait_1s(1); // 1 sec
 		chicken_SEC=MIN_CHICKEN(weight);
 					
 		while(1){
@@ -90,24 +102,28 @@ int main(){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0x00)
 			{
 				calc_min(&chicken_SEC,&chicken_MIN);
+				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(chicken_MIN,chicken_SEC);
 				LED_END();
-				// END "bUZZ" 
+				Buzz();
 				break;
+				
 			}
-			//else  ON LCD "PLZ PUSH START"
+			
+			LCD_Write_Data("Push Start",10);
+			systick_init(1600000); // 1 sec
 			}
 		}
-			 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
+		
+			 if(door==1) break;
 						 
 		}
 		break;
 
 		case 'D':
 		case 'd':
-		//CLEAR LCD
-		//PRINT "ENTERE TIME"
-		NUM_SEC (1);
+		LCD_Write_Data("ENTER TIME",10);
+		Systick_Wait_1s(1); // 1 sec
 		TIMER_D(&Timer_min,&Timer_sec );
 		while (1)
 		{
@@ -117,22 +133,20 @@ int main(){
 			while(1){
 			if ((GPIO_PORTF_DATA_R & 0X01) ==0)
 			{
+				GPIO_PORTF_DATA_R|= 0x0E;
 				Timer(Timer_min,Timer_sec);
 				LED_END();
-				// END "bUZZ" 
+				Buzz();
 				break;
 			}
-			//else // ON LCD "PLZ PUSH START"
+			LCD_Write_Data("Push Start",10);
+			systick_init(1600000); // 1 sec
 			}
 		}
-		 if(door & ~(GPIO_PORTF_DATA_R & 0X01 )) break;
+		if(door==1) break;
 			
 		}
 		break;
-
-	//default://on lcd error input .
-
-		//break;
 	}
 }
-
+}
