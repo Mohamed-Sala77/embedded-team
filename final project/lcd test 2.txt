@@ -1,0 +1,129 @@
+/* LCD commands */
+#define EN                0x04    
+#define clear_display     0x01
+#define returnHome        0x02
+#define moveCursorRight   0x06
+#define moveCursorLeft    0x08
+#define shiftDisplayRight 0x1C
+#define shiftDisplayLeft  0x18
+#define cursorBlink       0x0F
+#define cursorOff         0x0C
+#define cursorOn          0x0E
+#define Function_set_4bit 0x28
+#define Function_set_8bit 0x38
+#define Entry_mode        0x06
+#define Function_8_bit    0x32
+#define Set5x7FontSize    0x20
+#define FirstRow          0x80
+void genericDelay(unsigned char n){
+	unsigned char i;
+	for(i=0; i<n; i++){
+		Systick_init(16000);  //1ms
+	}
+}
+void LCD_4bit(unsigned char data, unsigned char control)
+{
+    data &= 0xF0;       /* Extract upper nibble for data */
+    control &= 0x0F;    /* Extract lower nibble for control */
+    GPIO_PORTB_DATA_R = data | control;       /* Set RS and R/W to zero for write operation */
+    GPIO_PORTB_DATA_R = data | control | EN;  /* Provide Pulse to Enable pin to perform wite operation */
+    genericDelay(1); // 1 ms 
+    GPIO_PORTB_DATA_R = data; /*Send data */
+    GPIO_PORTB_DATA_R = 0;	 /* stop writing data to LCD */
+}
+
+void LCD_command(unsigned char command){
+	
+	LCD_4bit((command & 0xF0) , 0);
+	LCD_4bit((command<<4), 0);
+	
+	if (command < 4)
+        genericDelay(2);          /* 2ms delay for commands 1 and 2 */
+    else
+        genericDelay(1);         /* 1ms delay for other commands */
+}
+
+void LCD_init(void){
+	
+	/enable port B/
+	SysTick_Init();
+  LCD_command(Set5x7FontSize);  /* select 5x7 font size and 2 rows of LCD */
+  LCD_command(Function_set_4bit); /* Select 4-bit Mode of LCD */
+  LCD_command(moveCursorRight); /* shift cursor right */
+  LCD_command(clear_display); /* clear whatever is written on display */
+  LCD_command(cursorBlink);  /* Enable Display and cursor blinking */
+		
+}
+
+
+void LCD_display(unsigned char data)
+{
+    LCD_4bit(data & 0xF0, 1);    /* Write upper nibble to LCD and RS = 1 to write data */
+    LCD_4bit(data << 4, 1);      /* Write lower nibble to LCD and RS = 1 to write data */
+    genericDelay(1);
+}
+	
+
+void LCD_String (char str)	/ Send string to LCD function */
+{
+	int i;
+	for(i=0;str[i]!=0;i++)  /* Send each char of string till the NULL */
+	{
+		LCD_display(str[i]);  /* Call LCD data write */
+	}
+}
+
+void LCD_moveCursor(unsigned char row,unsigned char col)
+{
+	unsigned char lcd_memory_address;
+	
+	/* Calculate the required address in the LCD DDRAM */
+	switch(row)
+	{
+		case 0:
+			lcd_memory_address=col;
+				break;
+		case 1:
+			lcd_memory_address=col+0x40;
+				break;
+	}					
+	/* Move the LCD cursor to this specific address */
+	LCD_command(lcd_memory_address | FirstRow);
+}
+
+void LCD_displayStringRowColumn(unsigned char row,unsigned char col,char *str)
+{
+	LCD_moveCursor(row,col); /* go to to the required LCD position */
+	LCD_String(str); /* display the string */
+}
+void LCD_init(void);                   /* LCD initialization function */
+void LCD_command(unsigned char command); /*Used to send commands to LCD */
+void LCD_String(char *str);
+ /*
+ * Description :
+ * Display the required decimal value on the screen
+ */
+void LCD_intgerToString(int data){
+  int  i ,j;
+  unsigned char num[16], t;
+	if(data==0){
+		num[0] = (data %10) +'0';
+		num[1] = '\0';
+	}
+	else	{
+  for (i=0 ; data >0 ; i++){
+  num[i] = (data %10) +'0';
+  data = data /10;
+  }
+	num[i] = '\0';
+
+	
+  for (j=0,i-- ; j<i ; j++,i--)
+  {
+  t= num[i] ;
+  num[i] = num[j] ;
+  num[j] = t;
+  
+  }
+}
+}
